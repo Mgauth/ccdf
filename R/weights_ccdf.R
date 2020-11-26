@@ -15,9 +15,9 @@ weights_ccdf <- function(Y,X,Z=NULL){
       for (i in 1:nrow(couple)){
         if (identical(as.numeric(couple[i,]),as.numeric(unique_couple[j,]))){
           index <- c(index,i)
-          index_list[[j]] <- index
         }
       }
+      index_list[[j]] <- index
     }
     return(index_list)
   }
