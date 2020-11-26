@@ -12,8 +12,7 @@ test_asymp <- function(Y,X,Z=NULL){
 
   y <- sort(unique(Y))
   if (is.null(Z)){
-    #modelmat <- model.matrix(Y~X)
-    modelmat <- cbind(rep(1,length(Y)),X)
+    modelmat <- model.matrix(Y~X)
   }
   else{
     modelmat <- model.matrix(Y~X+Z)
