@@ -12,7 +12,8 @@ test_asymp <- function(Y,X,Z=NULL){
 
   y <- sort(unique(Y))
   if (is.null(Z)){
-    modelmat <- model.matrix(Y~X)
+    #modelmat <- model.matrix(Y~X)
+    modelmat <- cbind(rep(1,length(Y)),X)
   }
   else{
     modelmat <- model.matrix(Y~X+Z)
@@ -51,8 +52,27 @@ test_asymp <- function(Y,X,Z=NULL){
   z <- sqrt(length(y)-1)*(beta[-length(y)])
   STAT <- sum(t(z)*z)
 
-  pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = 15000, acc = 5e-04)$Qq
+  param <- list(lim=15000,acc= 5e-04)
+
+  pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
+
+
+  times <- 2
+  while ((pval>1)&(times<11)){
+    pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = times*param$lim, acc = param$acc)$Qq
+    times <- times*2
+  }
+
+  if (pval>1){pval<-1}
+
+  times <- 0.1
+  while ((pval>1)&(times<5e-08)){
+    pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = times*param$acc)$Qq
+    times <- 0.1*times
+  }
 
   return(data.frame(raw_pval=pval,Stat=STAT))
 
 }
+
+
