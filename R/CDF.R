@@ -143,13 +143,6 @@ CDF <- function(Y,X,Z=NULL,method="logistic regression", fast=FALSE){
         ccdf_nox[[i]] <- 1/(1+exp_predlin_nox) # exp_predlin_nox/(1+exp_predlin_nox)
 
       }
-      
-      else if (method=="linear regression"){
-        reg_x <- lm(indi_Y ~ 1 + modelmat[,2:3]) 
-        reg_nox <- lm(indi_Y ~ 1 + modelmat[,-2])
-        ccdf_x[[i]] <- predict(reg_x)[w] 
-        ccdf_nox[[i]] <- predict(reg_nox)[w]
-      }
     }
 
     ccdf_x <- unlist(ccdf_x, use.names = FALSE)
