@@ -17,7 +17,7 @@ ccdf_testing <- function(exprmat = NULL,
                          covariates = NULL,
                          method = "logistic regression",
                          distance = "L2",
-                         test = c("permutations","asymptotic"),
+                         test = c("asymptotic","permutations","dist_permutations"),
                          n_perm = 100,
                          n_perm_start = 100,
                          n_perm_end = 1000,
@@ -41,7 +41,7 @@ ccdf_testing <- function(exprmat = NULL,
   #           "beforehand...")
   #   y <- y[v_g>0, ]
   # }
-  if (test=="permutations"){
+  if (test=="dist_permutations"){
 
     if (adaptive==TRUE){ # rajouter verif n_perm
 
@@ -112,6 +112,29 @@ ccdf_testing <- function(exprmat = NULL,
                        adj_pval = p.adjust(res, method = "BH"))
 
     }
+
+  }
+
+
+
+  else if (test=="permutations"){
+
+
+      print(paste("Computing", n_perm, "permutations..."))
+
+      res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){test_perm(
+        Y = exprmat[i,],
+        X = variables2test,
+        Z = covariates,
+        n_perm = n_perm,
+        parallel = parallel,
+        n_cpus = n_cpus)},cl=1)
+
+      res <- as.vector(unlist(res))
+
+      df <- data.frame(raw_pval = res,
+                       adj_pval = p.adjust(res, method = "BH"))
+
 
   }
 
