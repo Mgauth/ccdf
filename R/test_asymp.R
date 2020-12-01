@@ -52,24 +52,24 @@ test_asymp <- function(Y,X,Z=NULL){
   z <- sqrt(length(y)-1)*(beta[-length(y)])
   STAT <- sum(t(z)*z)
 
-  #param <- list(lim=15000,acc= 5e-04)
+  param <- list(lim=15000,acc= 5e-04)
 
-  pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = 15000, acc = 5e-04)$Qq
+  pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
 
 
-  #times <- 2
-  #while ((pval>1)&(times<11)){
-  #  pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = times*param$lim, acc = param$acc)$Qq
-  #  times <- times*2
-  #}
+  times <- 2
+  while ((pval>1)&(times<11)){
+    pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = times*param$lim, acc = param$acc)$Qq
+    times <- times*2
+  }
 
-  #if (pval>1){pval<-1}
+  if (pval>1){pval<-1}
 
-  #times <- 0.1
-  #while ((pval>1)&(times<5e-08)){
-  #  pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = times*param$acc)$Qq
-  #  times <- 0.1*times
-  #}
+  times <- 0.1
+  while ((pval>1)&(times<5e-08)){
+    pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = times*param$acc)$Qq
+    times <- 0.1*times
+  }
 
   return(data.frame(raw_pval=pval,Stat=STAT))
 
