@@ -36,13 +36,13 @@ ccdf_testing <- function(exprmat = NULL,
   else{
     cl <- 1
   }
-
+  
   # if(is.null(exprmat)){
   #   stop("'exprmat' should be specified")
   # }
   #
   # stopifnot(!is.null(variables2test))
-
+  
   # checking for 0 variance genes
   # v_g <- matrixStats::rowVars(exprmat)
   # if(sum(v_g==0) > 0){
@@ -53,13 +53,13 @@ ccdf_testing <- function(exprmat = NULL,
   #   y <- y[v_g>0, ]
   # }
   if (test=="dist_permutations"){
-
+    
     if (adaptive==TRUE){ # rajouter verif n_perm
-
+      
       step_perm <- c(n_perm_start, n_perm_start*4, n_perm_end)
-
+      
       print(paste("Computing", step_perm[1], "permutations..."))
-
+      
       res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){permut(
         Y = exprmat[i,],
         X = variables2test,
@@ -74,13 +74,13 @@ ccdf_testing <- function(exprmat = NULL,
       nb_perm <- rep(n_perm_start+1,nrow(exprmat))
       nb <- round((res$pval*(n_perm_start+1))-1)
       #res <- as.vector(unlist(res$pval))
-
+      
       for (k in 2:length(step_perm)){
-
+        
         index <- which(df$adj_pval<(0.2/(k-1)))
-
+        
         print(paste("Computing", step_perm[k], "permutations..."))
-
+        
         res_perm <- pbapply::pbsapply(1:nrow(exprmat[index,]), FUN=function(i){permut(
           Y = exprmat[index,][i,],
           X = variables2test,
@@ -95,18 +95,18 @@ ccdf_testing <- function(exprmat = NULL,
         nb_perm[index] <- rep(step_perm[k]+1,nrow(exprmat[index,]))
         nb <- nb[index] + round((res_perm*(step_perm[k]+1))-1)
         #res_perm <- as.vector(unlist(res_perm$pval))
-
+        
       }
-
+      
       pval <- (nb+1)/nb_perm
       df <- data.frame(raw_pval = pval,
                        adj_pval = p.adjust(pval, method = "BH"))
     }
-
+    
     else{
-
+      
       print(paste("Computing", n_perm, "permutations..."))
-
+      
       res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){permut(
         Y = exprmat[i,],
         X = variables2test,
@@ -115,40 +115,40 @@ ccdf_testing <- function(exprmat = NULL,
         n_perm = n_perm,
         method = method,
         parallel = parallel,
-        n_cpus = n_cpus,
-        fast = fast)},cl=1)
+        n_cpus = 1,
+        fast = fast)},cl=n_cpus)
       res <- as.vector(unlist(res))
-
+      
       df <- data.frame(raw_pval = res,
                        adj_pval = p.adjust(res, method = "BH"))
-
+      
     }
-
+    
   }
-
-
-
+  
+  
+  
   else if (test=="permutations"){
-
-
-      print(paste("Computing", n_perm, "permutations..."))
-
-      res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){test_perm(
-        Y = exprmat[i,],
-        X = variables2test,
-        Z = covariates,
-        n_perm = n_perm,
-        parallel = parallel,
-        n_cpus = n_cpus)},cl=1)
-
-      res <- as.vector(unlist(res))
-
-      df <- data.frame(raw_pval = res,
-                       adj_pval = p.adjust(res, method = "BH"))
-
-
+    
+    
+    print(paste("Computing", n_perm, "permutations..."))
+    
+    res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){test_perm(
+      Y = exprmat[i,],
+      X = variables2test,
+      Z = covariates,
+      n_perm = n_perm,
+      parallel = parallel,
+      n_cpus = n_cpus)},cl=1)
+    
+    res <- as.vector(unlist(res))
+    
+    df <- data.frame(raw_pval = res,
+                     adj_pval = p.adjust(res, method = "BH"))
+    
+    
   }
-
+  
   else if (test=="asymptotic"){
     Y <- exprmat
     X <- variables2test
@@ -156,7 +156,7 @@ ccdf_testing <- function(exprmat = NULL,
     res <- do.call("rbind",pbapply::pblapply(1:nrow(Y), function(i){test_asymp(Y[i,], X, Z)}, cl=n_cpus))
     df <- data.frame(raw_pval = res$raw_pval, adj_pval = p.adjust(res$raw_pval, method = "BH"), test_statistic = res$Stat)
   }
-
+  
   return(df)
-
+  
 }
