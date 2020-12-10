@@ -41,14 +41,12 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = TRUE, n_cpus = NULL){
     beta[i] <- reg$coefficients[2]
   }
 
-  z <- sqrt(length(y)-1)*(beta[-length(y)])
+  z <- sqrt(length(Y))*(beta[-length(y)])
   STAT_obs <- sum(t(z)*z)
-
-  STAT_perm <- rep(NA,n_perm)
 
   if (is.null(Z)){
 
-    for(k in 1:n_perm){
+    results <- foreach(i = 1:n_perm, .combine = 'c') %dopar% {
 
       X_star <- sample(X)
       modelmat_perm <- model.matrix(Y~X_star)
@@ -60,15 +58,15 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = TRUE, n_cpus = NULL){
         beta_perm[i] <- reg$coefficients[2]
       }
 
-      z <- sqrt(length(y)-1)*(beta_perm[-length(y)])
-      STAT_perm[k] <- sum(t(z)*z)
+      z <- sqrt(length(Y))*(beta_perm[-length(y)])
+      STAT_perm <- sum(t(z)*z)
 
     }
   }
 
   else{
 
-    for (k in 1:n_perm){
+    results <- foreach(i = 1:n_perm, .combine = 'c') %dopar% {
 
       sample_X <- function(X,Z,z){
         X_sample <- rep(NA,length(Z))
@@ -90,8 +88,8 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = TRUE, n_cpus = NULL){
         beta_perm[i] <- reg$coefficients[2]
       }
 
-      z <- sqrt(length(y)-1)*(beta_perm[-length(y)])
-      STAT_perm[k] <- sum(t(z)*z)
+      z <- sqrt(length(Y))*(beta_perm[-length(y)])
+      STAT_perm <- sum(t(z)*z)
     }
   }
 
@@ -99,7 +97,7 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = TRUE, n_cpus = NULL){
     parallel::stopCluster(cl)
   }
 
-  pval <- (sum(1*(STAT_perm>=STAT_obs))+1)/(n_perm+1)
+  pval <- (sum(1*(results>=STAT_obs))+1)/(n_perm+1)
 
 
   return(data.frame(raw_pval=pval))
