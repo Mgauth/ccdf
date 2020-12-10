@@ -115,8 +115,8 @@ ccdf_testing <- function(exprmat = NULL,
         n_perm = n_perm,
         method = method,
         parallel = parallel,
-        n_cpus = 1,
-        fast = fast)},cl=n_cpus)
+        n_cpus = n_cpus,
+        fast = fast)},cl=1)
       res <- as.vector(unlist(res))
       
       df <- data.frame(raw_pval = res,
@@ -139,7 +139,7 @@ ccdf_testing <- function(exprmat = NULL,
       Z = covariates,
       n_perm = n_perm,
       parallel = parallel,
-      n_cpus = n_cpus)},cl=1)
+      n_cpus = 1)},cl=n_cpus)
     
     res <- as.vector(unlist(res))
     
