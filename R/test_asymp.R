@@ -52,7 +52,7 @@ test_asymp <- function(Y,X,Z=NULL){
   z <- sqrt(length(Y))*(beta[-length(y)])
   STAT <- sum(t(z)*z)
 
-  param <- list(lim=15000,acc= 5e-04)
+  param <- list(lim=15000,acc= 5e-10)
 
   pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
 
