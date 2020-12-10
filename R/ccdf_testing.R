@@ -133,15 +133,15 @@ ccdf_testing <- function(exprmat = NULL,
     
     print(paste("Computing", n_perm, "permutations..."))
     
-    res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){test_perm(
-      Y = exprmat[i,],
-      X = variables2test,
-      Z = covariates,
-      n_perm = n_perm,
-      parallel = parallel,
-      n_cpus = n_cpus)},cl=1)
+    res <- do.call("rbind",pbapply::pblapply(1:nrow(exprmat), FUN=function(i){
+      test_perm(Y = exprmat[i,],
+                X = variables2test,
+                Z = covariates,
+                n_perm = n_perm,
+                parallel = parallel,
+                n_cpus = n_cpus)},cl=1))
     
-    res <- as.vector(unlist(res))
+    #res <- as.vector(unlist(res))
     
     df <- data.frame(raw_pval = res,
                      adj_pval = p.adjust(res, method = "BH"))
