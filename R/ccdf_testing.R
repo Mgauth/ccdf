@@ -6,11 +6,11 @@
 #' @export
 #' @examples
 #' X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
-#' Y <- matrix(rnorm(n = 1000,0,1),nrow=10,ncol=10)
+#' Y <- matrix(rnorm(n = 1000,0,1),nrow=10,ncol=100)
 #' Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1))
 #' Y <- replicate(10,Y)
 #' Z <- rnorm(n = 100)
-#' res1 <- ccdf_testing(Y,X,Z,method="logistic regression",test="asymptotic",n_cpus=15)
+#' res1 <- ccdf_testing(Y,X,test="permutations",n_cpus=16)
 #'
 ccdf_testing <- function(exprmat = NULL,
                          variables2test = NULL,
@@ -132,7 +132,7 @@ ccdf_testing <- function(exprmat = NULL,
     
     
     print(paste("Computing", n_perm, "permutations..."))
-    
+    browser()
     res <- do.call("rbind",pbapply::pblapply(1:nrow(exprmat), FUN=function(i){
       test_perm(Y = exprmat[i,],
                 X = variables2test,
@@ -143,8 +143,8 @@ ccdf_testing <- function(exprmat = NULL,
     
     #res <- as.vector(unlist(res))
     
-    df <- data.frame(raw_pval = res,
-                     adj_pval = p.adjust(res, method = "BH"))
+    df <- data.frame(raw_pval = res$raw_pval,
+                     adj_pval = p.adjust(res$raw_pval, method = "BH"))
     
     
   }
