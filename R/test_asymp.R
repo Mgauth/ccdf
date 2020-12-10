@@ -7,7 +7,6 @@
 #' @export
 
 
-
 test_asymp <- function(Y,X,Z=NULL){
 
   y <- sort(unique(Y))
@@ -54,7 +53,6 @@ test_asymp <- function(Y,X,Z=NULL){
 
   param <- list(lim=15000,acc= 5e-10)
 
-  #pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
   pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
 
 
