@@ -49,11 +49,12 @@ test_asymp <- function(Y,X,Z=NULL){
   decomp <- eigen(Sigma)
   A <- matrix(0,length(y)-1,length(y)-1)
   diag(A) <- decomp$values
-  z <- sqrt(length(y)-1)*(beta[-length(y)])
-  STAT <- sum(t(z)*z)
+  z <- beta[-length(y)]
+  STAT <- (length(Y))*sum(t(z)*z)
 
-  param <- list(lim=15000,acc= 5e-04)
+  param <- list(lim=15000,acc= 5e-10)
 
+  #pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
   pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
 
 

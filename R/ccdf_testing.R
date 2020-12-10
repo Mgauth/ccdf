@@ -22,9 +22,20 @@ ccdf_testing <- function(exprmat = NULL,
                          n_perm_start = 100,
                          n_perm_end = 1000,
                          parallel = TRUE,
-                         n_cpus = parallel::detectCores()-1,
+                         n_cpus = NULL,
                          fast = FALSE,
                          adaptive=FALSE){
+  
+  if(parallel){
+    if(is.null(n_cpus)){
+      n_cpus <- parallel::detectCores() - 1
+    }
+    cl <- parallel::makeCluster(n_cpus)
+    doParallel::registerDoParallel(cl)
+  }
+  else{
+    cl <- 1
+  }
 
   # if(is.null(exprmat)){
   #   stop("'exprmat' should be specified")
