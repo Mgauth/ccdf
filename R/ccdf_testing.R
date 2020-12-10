@@ -132,7 +132,6 @@ ccdf_testing <- function(exprmat = NULL,
     
     
     print(paste("Computing", n_perm, "permutations..."))
-    browser()
     res <- do.call("rbind",pbapply::pblapply(1:nrow(exprmat), FUN=function(i){
       test_perm(Y = exprmat[i,],
                 X = variables2test,
