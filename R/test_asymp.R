@@ -49,8 +49,13 @@ test_asymp <- function(Y,X,Z=NULL){
   decomp <- eigen(Sigma)
   A <- matrix(0,length(y)-1,length(y)-1)
   diag(A) <- decomp$values
+<<<<<<< HEAD
   z <- beta[-length(y)]
   STAT <- (length(Y))*sum(t(z)*z)
+=======
+  z <- sqrt(length(Y))*(beta[-length(y)])
+  STAT <- sum(t(z)*z)
+>>>>>>> a5a3f828dac41d2c145468b840d8eca14b747845
 
   param <- list(lim=15000,acc= 5e-10)
 
