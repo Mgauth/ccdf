@@ -139,7 +139,7 @@ ccdf_testing <- function(exprmat = NULL,
       Z = covariates,
       n_perm = n_perm,
       parallel = parallel,
-      n_cpus = 1)},cl=n_cpus)
+      n_cpus = n_cpus)},cl=1)
     
     res <- as.vector(unlist(res))
     
