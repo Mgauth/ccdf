@@ -27,8 +27,7 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = TRUE, n_cpus = NULL){
   y <- sort(unique(Y))
   
   if (is.null(Z)){
-    #modelmat <- model.matrix(Y~X)
-    modelmat <- cbind(rep(1,length(Y)),X)
+    modelmat <- model.matrix(Y~X)
   }
   else{
     modelmat <- model.matrix(Y~X+Z)

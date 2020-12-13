@@ -5,10 +5,11 @@
 #'
 #' @export
 #' @examples
-#' X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
-#' Y <- matrix(rnorm(n = 1000,0,1),nrow=10,ncol=100)
-#' Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1))
-#' Y <- replicate(10,Y)
+#' X <- as.factor(rbinom(n=40, size = 1, prob = 0.5))
+
+#' Y <- ((X==1)*rnorm(n = 20,0,1)) + ((X==0)*rnorm(n = 20,2,1))
+#' Y <- replicate(10, ((X==1)*rnorm(n = 20,0,1)) + ((X==0)*rnorm(n = 20,2,1)))
+#' Y <- t(Y)
 #' Z <- rnorm(n = 100)
 #' res1 <- ccdf_testing(Y,X,test="permutations",n_cpus=16)
 #'
@@ -19,11 +20,11 @@ ccdf_testing <- function(exprmat = NULL,
                          distance = "L2",
                          test = c("asymptotic","permutations","dist_permutations"),
                          n_perm = 100,
-                         n_perm_start = 100,
-                         n_perm_end = 1000,
+                         n_perm_adaptative = c(100,500,1000,2000),
+                         threshold = c(0.1,0.05,0.01),
                          parallel = TRUE,
                          n_cpus = NULL,
-                         fast = FALSE,
+                         fast = TRUE,
                          adaptive=FALSE){
   
   if(parallel){
@@ -56,51 +57,41 @@ ccdf_testing <- function(exprmat = NULL,
     
     if (adaptive==TRUE){ # rajouter verif n_perm
       
-      step_perm <- c(n_perm_start, n_perm_start*4, n_perm_end)
-      
-      print(paste("Computing", step_perm[1], "permutations..."))
+      print(paste("Computing", n_perm_adaptative[1], "permutations..."))
       
       res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){permut(
         Y = exprmat[i,],
         X = variables2test,
         Z = covariates,
         distance=distance,
-        n_perm = step_perm[1],
+        n_perm = n_perm_adaptative[1],
         method = method,
         parallel = parallel,
         n_cpus = n_cpus,
-        fast = fast)},cl=1)
-      res <- as.vector(unlist(res))
-      nb_perm <- rep(n_perm_start+1,nrow(exprmat))
-      nb <- round((res$pval*(n_perm_start+1))-1)
-      #res <- as.vector(unlist(res$pval))
+        fast = fast)$pval},cl=1)
       
-      for (k in 2:length(step_perm)){
+      for (k in 1:length(threshold)){
         
-        index <- which(df$adj_pval<(0.2/(k-1)))
+        index <- which(res<threshold[k])
         
-        print(paste("Computing", step_perm[k], "permutations..."))
+        print(paste("Computing", n_perm_adaptative[k+1], "permutations..."))
         
         res_perm <- pbapply::pbsapply(1:nrow(exprmat[index,]), FUN=function(i){permut(
           Y = exprmat[index,][i,],
           X = variables2test,
           Z = covariates,
           distance=distance,
-          n_perm = step_perm[k],
+          n_perm = n_perm_adaptative[k+1],
           method = method,
           parallel = parallel,
           n_cpus = n_cpus,
-          fast = fast)},cl=1)
-        res_perm <- as.vector(unlist(res_perm))
-        nb_perm[index] <- rep(step_perm[k]+1,nrow(exprmat[index,]))
-        nb <- nb[index] + round((res_perm*(step_perm[k]+1))-1)
-        #res_perm <- as.vector(unlist(res_perm$pval))
+          fast = fast)$pval},cl=1)
+
         
       }
       
-      pval <- (nb+1)/nb_perm
-      df <- data.frame(raw_pval = pval,
-                       adj_pval = p.adjust(pval, method = "BH"))
+      df <- data.frame(raw_pval = res,
+                       adj_pval = p.adjust(res, method = "BH"))
     }
     
     else{
@@ -116,8 +107,8 @@ ccdf_testing <- function(exprmat = NULL,
         method = method,
         parallel = parallel,
         n_cpus = n_cpus,
-        fast = fast)},cl=1)
-      res <- as.vector(unlist(res))
+        fast = fast)$pval},cl=1)
+
       
       df <- data.frame(raw_pval = res,
                        adj_pval = p.adjust(res, method = "BH"))
@@ -130,20 +121,64 @@ ccdf_testing <- function(exprmat = NULL,
   
   else if (test=="permutations"){
     
+    if (adaptive==TRUE){ # rajouter verif n_perm
+      
+      print(paste("Computing", n_perm_adaptative[1], "permutations..."))
+      
+      res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){test_perm(
+        Y = exprmat[i,],
+        X = variables2test,
+        Z = covariates,
+        n_perm = n_perm_adaptative[1],
+        parallel = parallel,
+        n_cpus = n_cpus)$raw_pval},cl=1)
+
+      for (k in 1:length(threshold)){
+
+        index <- which(res<threshold[k])
+        
+        if (length(index)==0){break}
+        
+        else{
+          
+          print(paste("Computing", n_perm_adaptative[k+1], "permutations..."))
+          
+          res_perm <- pbapply::pbsapply(1:nrow(exprmat[index,]), FUN=function(i){test_perm(
+            Y = exprmat[index,][i,],
+            X = variables2test,
+            Z = covariates,
+            n_perm = n_perm_adaptative[k+1],
+            parallel = parallel,
+            n_cpus = n_cpus)$raw_pval},cl=1)
+          res[index] <- res_perm
+        }
+      
+        
+      }
+      
+      df <- data.frame(raw_pval = res,
+                       adj_pval = p.adjust(res, method = "BH"))
+    }
     
-    print(paste("Computing", n_perm, "permutations..."))
-    res <- do.call("rbind",pbapply::pblapply(1:nrow(exprmat), FUN=function(i){
-      test_perm(Y = exprmat[i,],
-                X = variables2test,
-                Z = covariates,
-                n_perm = n_perm,
-                parallel = parallel,
-                n_cpus = cl)},cl=1))
-    
-    #res <- as.vector(unlist(res))
-    
-    df <- data.frame(raw_pval = res$raw_pval,
-                     adj_pval = p.adjust(res$raw_pval, method = "BH"))
+    else{
+      
+      print(paste("Computing", n_perm, "permutations..."))
+      
+      print(paste("Computing", n_perm, "permutations..."))
+      res <- do.call("rbind",pbapply::pblapply(1:nrow(exprmat), FUN=function(i){
+        test_perm(Y = exprmat[i,],
+                  X = variables2test,
+                  Z = covariates,
+                  n_perm = n_perm,
+                  parallel = parallel,
+                  n_cpus = cl)},cl=1))
+      
+      #res <- as.vector(unlist(res))
+      
+      df <- data.frame(raw_pval = res$raw_pval,
+                       adj_pval = p.adjust(res$raw_pval, method = "BH"))
+      
+    }
     
     
   }
