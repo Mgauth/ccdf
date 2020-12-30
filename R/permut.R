@@ -98,12 +98,13 @@ permut <- function(Y, X, Z = NULL, distance = "L2", n_perm, method="logistic reg
       #AD = length(Y)*sum(((res$ccdf_nox-res$ccdf_x)^2)/(res$ccdf_nox*(1-res$ccdf_nox)))
     }
   }
-
+  
+  score <- sum(1*(results>=init_dist))+1
   pval <- (sum(1*(results>=init_dist))+1)/(n_perm+1)
 
   if(parallel){
     parallel::stopCluster(cl)
   }
-  return(list(pval=pval))
+  return(list(score=score,pval=pval))
 
 }

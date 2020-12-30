@@ -96,10 +96,11 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = TRUE, n_cpus = NULL){
     parallel::stopCluster(cl)
   }
   
+  score <- sum(1*(results>=STAT_obs))+1
   pval <- (sum(1*(results>=STAT_obs))+1)/(n_perm+1)
   
   
-  return(data.frame(raw_pval=pval))
+  return(data.frame(score=score,raw_pval=pval))
   
 }
 
