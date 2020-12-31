@@ -2,33 +2,94 @@
 % Please edit documentation in R/ccdf_testing.R
 \name{ccdf_testing}
 \alias{ccdf_testing}
-\title{CDF function}
+\title{Complex hypothesis testing using (un)conditional independence test}
 \usage{
 ccdf_testing(
   exprmat = NULL,
-  variables2test = NULL,
-  covariates = NULL,
-  method = "logistic regression",
-  norm = "L2",
-  test = c("permutations", "asymptotic"),
+  variable2test = NULL,
+  covariate = NULL,
+  method = c("logistic regression", "linear regression"),
+  distance = c("L2", "L1", "L_sup"),
+  test = c("asymptotic", "permutations", "dist_permutations"),
   n_perm = 100,
+  n_perm_adaptative = c(100, 150, 250, 500),
+  thresholds = c(0.1, 0.05, 0.01),
   parallel = TRUE,
-  n_cpus = 15,
-  fast = TRUE
+  n_cpus = NULL,
+  fast = TRUE,
+  adaptive = FALSE
 )
 }
 \arguments{
-\item{exprmat}{}
+\item{exprmat}{a numeric matrix or data frame of size \code{G x n} containing the
+preprocessed expressions from \code{n} samples (or cells) for \code{G}
+genes. Default is \code{NULL}.}
+
+\item{variable2test}{\code{variable2test} must be a numeric or factor vector of size \code{n}
+containing the variable to be tested (the condition).}
+
+\item{covariate}{\code{covariate} must be a numeric or factor vector of size \code{n}
+containing the model covariates for \code{n} samples.}
+
+\item{distance}{a character string indicating which distance to use to
+compute the test, either \code{'L2'}, \code{'L1'} or 
+\code{'L_sup'}, when \code{method} is \code{'dist_permutations'}, 
+Default is \code{'L2'}.}
+
+\item{n_perm}{the number of permutations. Default is \code{100}.}
+
+\item{thresholds}{a vector of the decreasing thresholds to compute
+adaptive permutations when \code{adaptive} is \code{TRUE}. 
+\code{length(thresholds)} should be equal to \code{length(n_perm_adaptive)-1}. 
+Default is \code{c(100,150,250,500)}.}
+
+\item{parallel}{a logical flag indicating whether parallel computation
+should be enabled. Default is \code{TRUE}.}
+
+\item{n_cpus}{an integer indicating the number of cores to be used when
+\code{parallel} is \code{TRUE}.
+Default is \code{parallel::detectCores() - 1}.}
+
+\item{fast}{a logical flag indicating whether the fast version of
+the logistic regression should be performed when \code{method} 
+is \code{'dist_permutations'}
+Default is \code{TRUE}.}
+
+\item{adaptive}{a logical flag indicating whether adaptive permutations
+should be performed. Default is \code{FALSE}.}
+
+\item{which_test}{a character string indicating which method to use to
+compute the test, either \code{'asymptotic'}, \code{'permutations'} or 
+\code{'dist_permutations'}.
+Default is \code{'asymptotic'}.}
+
+\item{n_perm_adaptive}{a vector of the increasing numbers of 
+adaptive permutations when \code{adaptive} is \code{TRUE}. 
+\code{length(n_perm_adaptive)} should be equal to \code{length(thresholds)+1}. 
+Default is \code{c(0.1,0.05,0.01)}.}
+}
+\value{
+A list with the following elements:\itemize{
+  \item \code{which_test}: a character string carrying forward the value of
+  the '\code{which_test}' argument indicating which test was performed (either
+  'asymptotic','permutations','dist_permutations').
+  \item \code{n_perm}: an integer carrying forward the value of the
+  '\code{n_perm}' argument or '\code{n_perm_adaptive}' indicating the number of permutations performed
+  (\code{NA} if asymptotic test was performed).
+  \item \code{pval}: computed p-values. A data frame with one raw for
+  each gene, and with 2 columns: the first one '\code{raw_pval}' contains
+  the raw p-values, the second one '\code{adj_pval}' contains the FDR adjusted p-values
+  using Benjamini-Hochberg correction.
+}
 }
 \description{
-CDF function
+Complex hypothesis testing using (un)conditional independence test
 }
 \examples{
-X <- as.factor(rbinom(n=50, size = 1, prob = 0.5))
-Y <- matrix(rnorm(n = 1000,0,1),nrow=10,ncol=10)
-Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1))
-Y <- replicate(10,Y)
+X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
+Y <- replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1)))
+Y <- t(Y)
 Z <- rnorm(n = 100)
-profvis(res <- ccdf_testing(t(Y),X,method="logistic regression",n_cpus=15))
-
+res <- ccdf_testing(exprmat=Y, variable2test=X, test="asymptotic") # asymptotic test
+res2 <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations", adaptive=TRUE) # adaptive permutation test
 }

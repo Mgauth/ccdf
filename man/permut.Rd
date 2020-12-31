@@ -8,11 +8,11 @@ permut(
   Y,
   X,
   Z = NULL,
-  norm = "L2",
-  n_perm = 100,
+  distance = "L2",
+  n_perm,
   method = "logistic regression",
   parallel = TRUE,
-  n_cpus = 15,
+  n_cpus = NULL,
   fast = TRUE
 )
 }
@@ -23,8 +23,8 @@ permut(
 permut
 }
 \examples{
-Y <- rnorm(n = 200)
+Y <- c(rep(0,40),rnorm(n = 160))
 X <- as.factor(rbinom(n=200, size = 1, prob = 0.5))
 Z <- rnorm(n = 100)
-profvis(permut(Y,X))
+permut(Y,X,n_perm=100)
 }
