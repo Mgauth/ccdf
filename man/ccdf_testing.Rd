@@ -12,7 +12,7 @@ ccdf_testing(
   distance = c("L2", "L1", "L_sup"),
   test = c("asymptotic", "permutations", "dist_permutations"),
   n_perm = 100,
-  n_perm_adaptative = c(100, 150, 250, 500),
+  n_perm_adaptive = c(100, 150, 250, 500),
   thresholds = c(0.1, 0.05, 0.01),
   parallel = TRUE,
   n_cpus = NULL,
@@ -29,14 +29,24 @@ genes. Default is \code{NULL}.}
 containing the variable to be tested (the condition).}
 
 \item{covariate}{\code{covariate} must be a numeric or factor vector of size \code{n}
-containing the model covariates for \code{n} samples.}
+containing the model covariate for \code{n} samples.}
 
 \item{distance}{a character string indicating which distance to use to
 compute the test, either \code{'L2'}, \code{'L1'} or 
 \code{'L_sup'}, when \code{method} is \code{'dist_permutations'}, 
 Default is \code{'L2'}.}
 
+\item{test}{a character string indicating which method to use to
+compute the test, either \code{'asymptotic'}, \code{'permutations'} or 
+\code{'dist_permutations'}.
+Default is \code{'asymptotic'}.}
+
 \item{n_perm}{the number of permutations. Default is \code{100}.}
+
+\item{n_perm_adaptive}{a vector of the increasing numbers of 
+adaptive permutations when \code{adaptive} is \code{TRUE}. 
+\code{length(n_perm_adaptive)} should be equal to \code{length(thresholds)+1}. 
+Default is \code{c(0.1,0.05,0.01)}.}
 
 \item{thresholds}{a vector of the decreasing thresholds to compute
 adaptive permutations when \code{adaptive} is \code{TRUE}. 
@@ -57,16 +67,6 @@ Default is \code{TRUE}.}
 
 \item{adaptive}{a logical flag indicating whether adaptive permutations
 should be performed. Default is \code{FALSE}.}
-
-\item{which_test}{a character string indicating which method to use to
-compute the test, either \code{'asymptotic'}, \code{'permutations'} or 
-\code{'dist_permutations'}.
-Default is \code{'asymptotic'}.}
-
-\item{n_perm_adaptive}{a vector of the increasing numbers of 
-adaptive permutations when \code{adaptive} is \code{TRUE}. 
-\code{length(n_perm_adaptive)} should be equal to \code{length(thresholds)+1}. 
-Default is \code{c(0.1,0.05,0.01)}.}
 }
 \value{
 A list with the following elements:\itemize{
