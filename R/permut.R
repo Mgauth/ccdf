@@ -2,7 +2,9 @@
 #'
 #' @param Y
 #'
-#' @import doParallel, parallel, foreach
+#' @import doParallel
+#' @import parallel
+#' @import foreach
 #' @export
 #'
 #' @examples

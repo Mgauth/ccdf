@@ -2,8 +2,13 @@
 #'
 #' @param X
 #'
-#'
+#' @import RcppNumerical
+#' @importFrom  randomForest randomForest
+#' @import rpart
+#' 
 #' @export
+#' 
+#' 
 
 
 CDF <- function(Y,X,Z=NULL,method="logistic regression", fast=FALSE){

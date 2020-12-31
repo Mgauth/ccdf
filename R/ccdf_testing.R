@@ -49,6 +49,11 @@
 #'\code{parallel} is \code{TRUE}.
 #'Default is \code{parallel::detectCores() - 1}.
 #'
+#'@import foreach
+#'@import doParallel
+#'@import CompQuadForm
+#'@import pbapply
+#'
 #'
 #'@return A list with the following elements:\itemize{
 #'   \item \code{which_test}: a character string carrying forward the value of

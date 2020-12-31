@@ -7,10 +7,11 @@
 #' @param parallel
 #' @param n_cpus
 #'
+#' @import doParallel
+#' @import parallel
+#' @import foreach
 #'
 #' @export
-
-
 
 test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = TRUE, n_cpus = NULL){
   

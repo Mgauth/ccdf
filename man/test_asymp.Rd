@@ -2,7 +2,7 @@
 % Please edit documentation in R/test_asymp.R
 \name{test_asymp}
 \alias{test_asymp}
-\title{CDF function}
+\title{Asymptotic test}
 \usage{
 test_asymp(Y, X, Z = NULL)
 }
@@ -10,5 +10,5 @@ test_asymp(Y, X, Z = NULL)
 \item{X}{}
 }
 \description{
-CDF function
+Asymptotic test
 }

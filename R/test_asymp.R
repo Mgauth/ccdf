@@ -1,10 +1,14 @@
-#' CDF function
+#' Asymptotic test
 #'
 #' @param Y
 #' @param X
 #'
+#' @import RcppNumerical
+#' @import CompQuadForm
 #'
 #' @export
+#' 
+#'
 
 
 test_asymp <- function(Y,X,Z=NULL){

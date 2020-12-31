@@ -8,6 +8,7 @@
 #'
 #'@return a plot of sorted gene-wise p-values
 #'@import viridisLite
+#'@import ggplot2
 #'@export
 
 plot_pvals <- function(pvals, ...){
