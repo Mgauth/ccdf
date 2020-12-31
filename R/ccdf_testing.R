@@ -63,9 +63,9 @@
 #'   using Benjamini-Hochberg correction.
 #' }
 #'
-#' @export
+#'@export
 #' 
-#' @examples
+#'@examples
 #' X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
 #' Y <- replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1)))
 #' Y <- t(Y)
