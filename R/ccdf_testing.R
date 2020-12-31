@@ -6,13 +6,13 @@
 #'
 #'@param covariate 
 #'\code{covariate} must be a numeric or factor vector of size \code{n}
-#'containing the model covariates for \code{n} samples.
+#'containing the model covariate for \code{n} samples.
 #'
 #'@param variable2test
 #'\code{variable2test} must be a numeric or factor vector of size \code{n}
 #' containing the variable to be tested (the condition).
 #'
-#'@param which_test a character string indicating which method to use to
+#'@param test a character string indicating which method to use to
 #'compute the test, either \code{'asymptotic'}, \code{'permutations'} or 
 #'\code{'dist_permutations'}.
 #'Default is \code{'asymptotic'}.
@@ -153,7 +153,7 @@ ccdf_testing <- function(exprmat = NULL,
             "Consider using the default parameters.")
   }
   
-  if (which_test == "permutations"){
+  if (test == "permutations"){
     N_possible_perms <- factorial(ncol(exprmat))
     if (n_perm > N_possible_perms) {
       warning("The number of permutations requested 'n_perm' is ",
@@ -190,8 +190,8 @@ ccdf_testing <- function(exprmat = NULL,
       
       res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){permut(
         Y = exprmat[i,],
-        X = variables2test,
-        Z = covariates,
+        X = variable2test,
+        Z = covariate,
         n_perm = n_perm_adaptive[1],
         parallel = TRUE,
         n_cpus = n_cpus)$score},cl=1)
@@ -209,8 +209,8 @@ ccdf_testing <- function(exprmat = NULL,
           
           res_perm <- pbapply::pbsapply(1:nrow(exprmat[index,]), FUN=function(i){permut(
             Y = exprmat[index,][i,],
-            X = variables2test,
-            Z = covariates,
+            X = variable2test,
+            Z = covariate,
             n_perm = n_perm_adaptive[k+1],
             parallel = parallel,
             n_cpus = n_cpus)$score},cl=1)
@@ -231,8 +231,8 @@ ccdf_testing <- function(exprmat = NULL,
       
       res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){permut(
         Y = exprmat[i,],
-        X = variables2test,
-        Z = covariates,
+        X = variable2test,
+        Z = covariate,
         distance=distance,
         n_perm = n_perm,
         method = method,
@@ -258,8 +258,8 @@ ccdf_testing <- function(exprmat = NULL,
       
       res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){test_perm(
         Y = exprmat[i,],
-        X = variables2test,
-        Z = covariates,
+        X = variable2test,
+        Z = covariate,
         n_perm = n_perm_adaptive[1],
         parallel = TRUE,
         n_cpus = n_cpus)$score},cl=1)
@@ -277,8 +277,8 @@ ccdf_testing <- function(exprmat = NULL,
           
           res_perm <- pbapply::pbsapply(1:nrow(exprmat[index,]), FUN=function(i){test_perm(
             Y = exprmat[index,][i,],
-            X = variables2test,
-            Z = covariates,
+            X = variable2test,
+            Z = covariate,
             n_perm = n_perm_adaptive[k+1],
             parallel = parallel,
             n_cpus = n_cpus)$score},cl=1)
@@ -299,8 +299,8 @@ ccdf_testing <- function(exprmat = NULL,
       
       res <- do.call("rbind",pbapply::pblapply(1:nrow(exprmat), FUN=function(i){
         test_perm(Y = exprmat[i,],
-                  X = variables2test,
-                  Z = covariates,
+                  X = variable2test,
+                  Z = covariate,
                   n_perm = n_perm,
                   parallel = parallel,
                   n_cpus = cl)},cl=1))
@@ -317,8 +317,8 @@ ccdf_testing <- function(exprmat = NULL,
   
   else if (test=="asymptotic"){
     Y <- exprmat
-    X <- variables2test
-    Z <- covariates
+    X <- variable2test
+    Z <- covariate
     res <- do.call("rbind",pbapply::pblapply(1:nrow(Y), function(i){test_asymp(Y[i,], X, Z)}, cl=n_cpus))
     df <- data.frame(raw_pval = res$raw_pval, adj_pval = p.adjust(res$raw_pval, method = "BH"), test_statistic = res$Stat)
   }
@@ -333,7 +333,7 @@ ccdf_testing <- function(exprmat = NULL,
     n_perm <- NA
   }
   
-  return(list(which_test = method,
+  return(list(which_test = test,
               n_perm = n_perm, 
               pvals = df))
   
