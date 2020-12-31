@@ -86,7 +86,7 @@ ccdf_testing <- function(exprmat = NULL,
                          distance = c("L2","L1","L_sup"),
                          test = c("asymptotic","permutations","dist_permutations"),
                          n_perm = 100,
-                         n_perm_adaptative = c(100,150,250,500),
+                         n_perm_adaptive = c(100,150,250,500),
                          thresholds = c(0.1,0.05,0.01),
                          parallel = TRUE,
                          n_cpus = NULL,
@@ -148,7 +148,7 @@ ccdf_testing <- function(exprmat = NULL,
   }
   stopifnot(distance %in% c("L2","L1","L_sup"))
   
-  if ((length(n_perm_adaptative)!=(length(thresholds)+1))){
+  if ((length(n_perm_adaptive)!=(length(thresholds)+1))){
     warning("length of thresholds + 1 must be equal to length of n_perm_adaptive. \n",
             "Consider using the default parameters.")
   }
@@ -186,16 +186,16 @@ ccdf_testing <- function(exprmat = NULL,
     
     if (adaptive==TRUE){
       
-      print(paste("Computing", n_perm_adaptative[1], "permutations..."))
+      print(paste("Computing", n_perm_adaptive[1], "permutations..."))
       
       res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){permut(
         Y = exprmat[i,],
         X = variables2test,
         Z = covariates,
-        n_perm = n_perm_adaptative[1],
+        n_perm = n_perm_adaptive[1],
         parallel = TRUE,
         n_cpus = n_cpus)$score},cl=1)
-      perm <- rep(n_perm_adaptative[1],nrow(exprmat))
+      perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
       for (k in 1:length(thresholds)){
         
@@ -205,17 +205,17 @@ ccdf_testing <- function(exprmat = NULL,
         
         else{
           
-          print(paste("Computing", sum(n_perm_adaptative[1:(k+1)]), "permutations..."))
+          print(paste("Computing", sum(n_perm_adaptive[1:(k+1)]), "permutations..."))
           
           res_perm <- pbapply::pbsapply(1:nrow(exprmat[index,]), FUN=function(i){permut(
             Y = exprmat[index,][i,],
             X = variables2test,
             Z = covariates,
-            n_perm = n_perm_adaptative[k+1],
+            n_perm = n_perm_adaptive[k+1],
             parallel = parallel,
             n_cpus = n_cpus)$score},cl=1)
           res[index] <- res[index] + res_perm
-          perm <- perm[index] + rep(n_perm_adaptative[k+1],nrow(exprmat[index,]))
+          perm <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
         }
         
         
@@ -254,16 +254,16 @@ ccdf_testing <- function(exprmat = NULL,
     
     if (adaptive==TRUE){
       
-      print(paste("Computing", n_perm_adaptative[1], "permutations..."))
+      print(paste("Computing", n_perm_adaptive[1], "permutations..."))
       
       res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){test_perm(
         Y = exprmat[i,],
         X = variables2test,
         Z = covariates,
-        n_perm = n_perm_adaptative[1],
+        n_perm = n_perm_adaptive[1],
         parallel = TRUE,
         n_cpus = n_cpus)$score},cl=1)
-      perm <- rep(n_perm_adaptative[1],nrow(exprmat))
+      perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
       for (k in 1:length(thresholds)){
         
@@ -273,17 +273,17 @@ ccdf_testing <- function(exprmat = NULL,
         
         else{
           
-          print(paste("Computing", sum(n_perm_adaptative[1:(k+1)]), "permutations..."))
+          print(paste("Computing", sum(n_perm_adaptive[1:(k+1)]), "permutations..."))
           
           res_perm <- pbapply::pbsapply(1:nrow(exprmat[index,]), FUN=function(i){test_perm(
             Y = exprmat[index,][i,],
             X = variables2test,
             Z = covariates,
-            n_perm = n_perm_adaptative[k+1],
+            n_perm = n_perm_adaptive[k+1],
             parallel = parallel,
             n_cpus = n_cpus)$score},cl=1)
           res[index] <- res[index] + res_perm
-          perm <- perm[index] + rep(n_perm_adaptative[k+1],nrow(exprmat[index,]))
+          perm <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
         }
         
         
@@ -326,7 +326,7 @@ ccdf_testing <- function(exprmat = NULL,
   rownames(df) <- genes_names
   
   if (adaptive == TRUE){
-    n_perm <- n_perm_adaptative
+    n_perm <- n_perm_adaptive
   }
   
   if (test == "asymptotic"){
