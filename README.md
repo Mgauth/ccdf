@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, echo = FALSE}
+``` r
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
