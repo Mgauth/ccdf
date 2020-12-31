@@ -1,16 +1,79 @@
-#' Complex dis
+#' Complex hypothesis testing using (un)conditional independence test
 #'
-#' @param exprmat
+#'@param exprmat a numeric matrix or data frame of size \code{G x n} containing the
+#'preprocessed expressions from \code{n} samples (or cells) for \code{G}
+#'genes. Default is \code{NULL}.
 #'
+#'@param covariate 
+#'\code{covariate} must be a numeric or factor vector of size \code{n}
+#'containing the model covariates for \code{n} samples.
+#'
+#'@param variable2test
+#'\code{variable2test} must be a numeric or factor vector of size \code{n}
+#' containing the variable to be tested (the condition).
+#'
+#'@param which_test a character string indicating which method to use to
+#'compute the test, either \code{'asymptotic'}, \code{'permutations'} or 
+#'\code{'dist_permutations'}.
+#'Default is \code{'asymptotic'}.
+#'
+#'@param n_perm the number of permutations. Default is \code{100}.
+#'
+#'@param adaptive a logical flag indicating whether adaptive permutations
+#'should be performed. Default is \code{FALSE}.
+#'
+#'@param n_perm_adaptive a vector of the increasing numbers of 
+#'adaptive permutations when \code{adaptive} is \code{TRUE}. 
+#'\code{length(n_perm_adaptive)} should be equal to \code{length(thresholds)+1}. 
+#'Default is \code{c(0.1,0.05,0.01)}.
+#'
+#'@param thresholds a vector of the decreasing thresholds to compute
+#'adaptive permutations when \code{adaptive} is \code{TRUE}. 
+#'\code{length(thresholds)} should be equal to \code{length(n_perm_adaptive)-1}. 
+#'Default is \code{c(100,150,250,500)}.
+#'
+#'@param distance a character string indicating which distance to use to
+#'compute the test, either \code{'L2'}, \code{'L1'} or 
+#'\code{'L_sup'}, when \code{method} is \code{'dist_permutations'}, 
+#'Default is \code{'L2'}.
+#'
+#'@param fast a logical flag indicating whether the fast version of
+#'the logistic regression should be performed when \code{method} 
+#'is \code{'dist_permutations'}
+#'Default is \code{TRUE}.
+#'
+#'@param parallel a logical flag indicating whether parallel computation
+#'should be enabled. Default is \code{TRUE}.
+#'
+#'@param n_cpus an integer indicating the number of cores to be used when
+#'\code{parallel} is \code{TRUE}.
+#'Default is \code{parallel::detectCores() - 1}.
+#'
+#'
+#'@return A list with the following elements:\itemize{
+#'   \item \code{which_test}: a character string carrying forward the value of
+#'   the '\code{which_test}' argument indicating which test was performed (either
+#'   'asymptotic','permutations','dist_permutations').
+#'   \item \code{n_perm}: an integer carrying forward the value of the
+#'   '\code{n_perm}' argument or '\code{n_perm_adaptive}' indicating the number of permutations performed
+#'   (\code{NA} if asymptotic test was performed).
+#'   \item \code{pval}: computed p-values. A data frame with one raw for
+#'   each gene, and with 2 columns: the first one '\code{raw_pval}' contains
+#'   the raw p-values, the second one '\code{adj_pval}' contains the FDR adjusted p-values
+#'   using Benjamini-Hochberg correction.
+#' }
 #'
 #' @export
+#' 
 #' @examples
 #' X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
 #' Y <- replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1)))
 #' Y <- t(Y)
 #' Z <- rnorm(n = 100)
-#' res1 <- ccdf_testing(Y,X,test="permutations",n_cpus=16,adaptive=TRUE)
-#'
+#' res <- ccdf_testing(exprmat=Y, variable2test=X, test="asymptotic") # asymptotic test
+#' res2 <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations", adaptive=TRUE) # adaptive permutation test
+
+
 ccdf_testing <- function(exprmat = NULL,
                          variable2test = NULL,
                          covariate = NULL,
@@ -19,7 +82,7 @@ ccdf_testing <- function(exprmat = NULL,
                          test = c("asymptotic","permutations","dist_permutations"),
                          n_perm = 100,
                          n_perm_adaptative = c(100,150,250,500),
-                         threshold = c(0.1,0.05,0.01),
+                         thresholds = c(0.1,0.05,0.01),
                          parallel = TRUE,
                          n_cpus = NULL,
                          fast = TRUE,
@@ -63,7 +126,7 @@ ccdf_testing <- function(exprmat = NULL,
             "beforehand...")
     exprmat <- exprmat[v_g>0, ]
   }
-
+  
   
   if (length(method) > 1) {
     method <- method[1]
@@ -80,12 +143,12 @@ ccdf_testing <- function(exprmat = NULL,
   }
   stopifnot(distance %in% c("L2","L1","L_sup"))
   
-  if ((length(n_perm_adaptative)!=(length(threshold)+1))){
-    warning("length of threshold + 1 must be equal to length of n_perm_adaptive. \n",
+  if ((length(n_perm_adaptative)!=(length(thresholds)+1))){
+    warning("length of thresholds + 1 must be equal to length of n_perm_adaptive. \n",
             "Consider using the default parameters.")
   }
   
-  if (which_test == "permutation") {
+  if (which_test == "permutations"){
     N_possible_perms <- factorial(ncol(exprmat))
     if (n_perm > N_possible_perms) {
       warning("The number of permutations requested 'n_perm' is ",
@@ -113,7 +176,7 @@ ccdf_testing <- function(exprmat = NULL,
   }
   
   # test
-
+  
   if (test=="dist_permutations"){
     
     if (adaptive==TRUE){
@@ -129,9 +192,9 @@ ccdf_testing <- function(exprmat = NULL,
         n_cpus = n_cpus)$score},cl=1)
       perm <- rep(n_perm_adaptative[1],nrow(exprmat))
       
-      for (k in 1:length(threshold)){
+      for (k in 1:length(thresholds)){
         
-        index <- which((res/(perm+1))<threshold[k])
+        index <- which((res/(perm+1))<thresholds[k])
         
         if (length(index)==0){break}
         
@@ -157,8 +220,6 @@ ccdf_testing <- function(exprmat = NULL,
                        adj_pval = p.adjust(res/(perm+1), method = "BH"))
     }
     
-    }
-    
     else{
       
       print(paste("Computing", n_perm, "permutations..."))
@@ -173,7 +234,7 @@ ccdf_testing <- function(exprmat = NULL,
         parallel = parallel,
         n_cpus = n_cpus,
         fast = fast)$pval},cl=1)
-
+      
       
       df <- data.frame(raw_pval = res,
                        adj_pval = p.adjust(res, method = "BH"))
@@ -198,10 +259,10 @@ ccdf_testing <- function(exprmat = NULL,
         parallel = TRUE,
         n_cpus = n_cpus)$score},cl=1)
       perm <- rep(n_perm_adaptative[1],nrow(exprmat))
-
-      for (k in 1:length(threshold)){
-
-        index <- which((res/(perm+1))<threshold[k])
+      
+      for (k in 1:length(thresholds)){
+        
+        index <- which((res/(perm+1))<thresholds[k])
         
         if (length(index)==0){break}
         
@@ -219,7 +280,7 @@ ccdf_testing <- function(exprmat = NULL,
           res[index] <- res[index] + res_perm
           perm <- perm[index] + rep(n_perm_adaptative[k+1],nrow(exprmat[index,]))
         }
-      
+        
         
       }
       
@@ -259,6 +320,17 @@ ccdf_testing <- function(exprmat = NULL,
   
   rownames(df) <- genes_names
   
-  return(df)
+  if (adaptive == TRUE){
+    n_perm <- n_perm_adaptative
+  }
+  
+  if (test == "asymptotic"){
+    n_perm <- NA
+  }
+  
+  return(list(which_test = method,
+              n_perm = n_perm, 
+              pvals = df))
+  
   
 }
