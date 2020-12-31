@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-`ccdf` is a package for performing single-cell RNA-seq differential expression analysis and more generally ***complex hypothesis testing***. 
+`ccdf` is a package for performing single-cell RNA-seq differential expression analysis and more generally **complex hypothesis testing**. 
 
 The main function of the package is `ccdf_testing()`. It  allows to use either an asymptotic test for large sample size or a permutation test for small sample size with the argument `method`.
 
@@ -29,7 +29,7 @@ The main function of the package is `ccdf_testing()`. It  allows to use either a
 
 ## Installation
 
-***To install `ccdf`, you can download the development version on [GitHub](https://github.com/Mgauth/ccdf)***
+**To install `ccdf`, you can download the development version on [GitHub](https://github.com/Mgauth/ccdf).**
 ```{r GitHub-install, eval=FALSE}
 #install.packages("devtoos")
 devtools::install_github("Mgauth/ccdf")
@@ -50,7 +50,8 @@ Y <- t(Y)
 ```{r estimation, eval = FALSE}
 # Hypothesis testing
 res_asymp <- ccdf_testing(exprmat=Y, variable2test=X, test="asymptotic") # asymptotic test
-res_perm <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations", adaptive=TRUE) # adaptive permutation test
+res_perm <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations",
+                         adaptive=TRUE) # adaptive permutation test
 ```
 
 
