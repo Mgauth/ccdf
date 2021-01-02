@@ -21,11 +21,12 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = TRUE, n_cpus = NULL){
     }
     cl <- parallel::makeCluster(n_cpus)
     doParallel::registerDoParallel(cl)
-  }else{
-    cl <- NULL
   }
   
-  y <- sort(unique(Y))
+
+  y <- sort(unique(Y))[seq(1,length(unique(Y)),by=round(0.05*length(unique(Y))))]
+
+
   
   if (is.null(Z)){
     modelmat <- model.matrix(Y~X)
