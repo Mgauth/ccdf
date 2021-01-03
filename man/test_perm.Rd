@@ -4,7 +4,7 @@
 \alias{test_perm}
 \title{Permutation test using the test statistic}
 \usage{
-test_perm(Y, X, Z = NULL, n_perm = 100, parallel = TRUE, n_cpus = NULL)
+test_perm(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL)
 }
 \arguments{
 \item{n_cpus}{}
