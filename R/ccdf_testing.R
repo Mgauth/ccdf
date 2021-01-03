@@ -289,8 +289,8 @@ ccdf_testing <- function(exprmat = NULL,
         
       }
       
-      df <- data.frame(raw_pval = (res+1)/(perm+1),
-                       adj_pval = p.adjust(res/(perm+1), method = "BH"))
+      df <- data.frame(raw_pval = (res_perm+1)/(perm+1),
+                       adj_pval = p.adjust(res_perm/(perm+1), method = "BH"))
     }
     
     else{
