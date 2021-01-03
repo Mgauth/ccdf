@@ -261,8 +261,8 @@ ccdf_testing <- function(exprmat = NULL,
         X = variable2test,
         Z = covariate,
         n_perm = n_perm_adaptive[1],
-        parallel = TRUE,
-        n_cpus = n_cpus)$score},cl=1)
+        parallel = FALSE,
+        n_cpus = 1)$score},cl=n_cpus)
       perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
       for (k in 1:length(thresholds)){
@@ -280,8 +280,8 @@ ccdf_testing <- function(exprmat = NULL,
             X = variable2test,
             Z = covariate,
             n_perm = n_perm_adaptive[k+1],
-            parallel = parallel,
-            n_cpus = n_cpus)$score},cl=1)
+            parallel = FALSE,
+            n_cpus = 1)$score},cl=n_cpus)
           res[index] <- res[index] + res_perm
           perm <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
         }
@@ -302,8 +302,8 @@ ccdf_testing <- function(exprmat = NULL,
                   X = variable2test,
                   Z = covariate,
                   n_perm = n_perm,
-                  parallel = parallel,
-                  n_cpus = n_cpus)},cl=1))
+                  parallel = FALSE,
+                  n_cpus = 1)},cl=n_cpus))
       
       #res <- as.vector(unlist(res))
       
