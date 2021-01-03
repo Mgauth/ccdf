@@ -97,7 +97,7 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
     }
     parallel::stopCluster(cl)
     
-    score <- sum(1*(results>=STAT_obs))+1
+    score <- sum(1*(results>=STAT_obs))
     pval <- (sum(1*(results>=STAT_obs))+1)/(n_perm+1)
   }
   
@@ -152,7 +152,7 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
       }
     }
     
-    score <- sum(1*(STAT_perm>=STAT_obs))+1
+    score <- sum(1*(STAT_perm>=STAT_obs))
     pval <- (sum(1*(STAT_perm>=STAT_obs))+1)/(n_perm+1)
   }
 
