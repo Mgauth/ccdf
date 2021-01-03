@@ -199,7 +199,7 @@ ccdf_testing <- function(exprmat = NULL,
       
       for (k in 1:length(thresholds)){
         
-        index <- which((res/(perm+1))<thresholds[k])
+        index <- which(((res+1)/(perm+1))<thresholds[k])
         
         if (length(index)==0){break}
         
@@ -215,14 +215,14 @@ ccdf_testing <- function(exprmat = NULL,
             parallel = parallel,
             n_cpus = n_cpus)$score},cl=1)
           res[index] <- res[index] + res_perm
-          perm <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
+          perm[index] <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
         }
         
         
       }
       
-      df <- data.frame(raw_pval = res/(perm+1),
-                       adj_pval = p.adjust(res/(perm+1), method = "BH"))
+      df <- data.frame(raw_pval = (res+1)/(perm+1),
+                       adj_pval = p.adjust((res+1)/(perm+1), method = "BH"))
     }
     
     else{
@@ -253,9 +253,8 @@ ccdf_testing <- function(exprmat = NULL,
   else if (test=="permutations"){
     
     if (adaptive==TRUE){
-      
+
       print(paste("Computing", n_perm_adaptive[1], "permutations..."))
-      
       res <- pbapply::pbsapply(1:nrow(exprmat), FUN=function(i){test_perm(
         Y = exprmat[i,],
         X = variable2test,
@@ -267,7 +266,7 @@ ccdf_testing <- function(exprmat = NULL,
       
       for (k in 1:length(thresholds)){
         
-        index <- which((res/(perm+1))<thresholds[k])
+        index <- which(((res+1)/(perm+1))<thresholds[k])
         
         if (length(index)==0){break}
         
@@ -283,14 +282,14 @@ ccdf_testing <- function(exprmat = NULL,
             parallel = FALSE,
             n_cpus = 1)$score},cl=n_cpus)
           res[index] <- res[index] + res_perm
-          perm <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
+          perm[index] <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
         }
         
         
       }
       
-      df <- data.frame(raw_pval = (res_perm+1)/(perm+1),
-                       adj_pval = p.adjust(res_perm/(perm+1), method = "BH"))
+      df <- data.frame(raw_pval = (res+1)/(perm+1),
+                       adj_pval = p.adjust((res+1)/(perm+1), method = "BH"))
     }
     
     else{
@@ -322,7 +321,7 @@ ccdf_testing <- function(exprmat = NULL,
     df <- data.frame(raw_pval = res$raw_pval, adj_pval = p.adjust(res$raw_pval, method = "BH"), test_statistic = res$Stat)
   }
   
-  rownames(df) <- genes_names
+  #rownames(df) <- genes_names
   
   if (adaptive == TRUE){
     n_perm <- n_perm_adaptive
