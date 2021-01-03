@@ -91,5 +91,5 @@ Y <- replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1)))
 Y <- t(Y)
 Z <- rnorm(n = 100)
 res <- ccdf_testing(exprmat=Y, variable2test=X, test="asymptotic") # asymptotic test
-res2 <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations", adaptive=TRUE) # adaptive permutation test
+res2 <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations", adaptive=FALSE) # adaptive permutation test
 }

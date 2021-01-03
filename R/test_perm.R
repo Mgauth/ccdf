@@ -26,7 +26,6 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
     n_cpus <- 1
   }
   
-
   y <- sort(unique(Y))[seq(1,length(unique(Y)),by=round(0.05*length(unique(Y))))]
 
 
@@ -105,7 +104,7 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
   else{
     if (is.null(Z)){
       
-      STAT_perm <- rep(NA,length(Y))
+      STAT_perm <- rep(NA,n_perm)
       
       for (k in 1:n_perm){
         
@@ -125,7 +124,7 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
     
     else{
       
-      STAT_perm <- rep(NA,length(Y))
+      STAT_perm <- rep(NA,n_perm)
       
       for(k in 1:n_perm){
         

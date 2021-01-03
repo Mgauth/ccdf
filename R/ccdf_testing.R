@@ -76,7 +76,7 @@
 #' Y <- t(Y)
 #' Z <- rnorm(n = 100)
 #' res <- ccdf_testing(exprmat=Y, variable2test=X, test="asymptotic") # asymptotic test
-#' res2 <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations", adaptive=TRUE) # adaptive permutation test
+#' res2 <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations", adaptive=FALSE) # adaptive permutation test
 
 
 ccdf_testing <- function(exprmat = NULL,
@@ -296,7 +296,6 @@ ccdf_testing <- function(exprmat = NULL,
     else{
       
       print(paste("Computing", n_perm, "permutations..."))
-      
       res <- do.call("rbind",pbapply::pblapply(1:nrow(exprmat), FUN=function(i){
         test_perm(Y = exprmat[i,],
                   X = variable2test,
