@@ -110,7 +110,7 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
         
         X_star <- sample(X)
         modelmat_perm <- model.matrix(Y~X_star)
-        beta_perm<- rep(NA,length(y))
+        beta_perm <- rep(NA,length(y))
         
         for (i in 1:length(y)){
           indi_Y <- 1*(Y<=y[i])
@@ -141,6 +141,7 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
                          "numeric" = perm_cont(Y,X,Z))
         
         modelmat_perm <- model.matrix(Y~X_star+Z)
+        beta_perm <- rep(NA,length(y))
         
         for (i in 1:length(y)){
           indi_Y <- 1*(Y<=y[i])
