@@ -13,8 +13,8 @@
 #'
 #' @export
 
-test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL){
-  
+test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, number_y = length(unique(Y))){
+
   if(parallel){
     if(is.null(n_cpus)){
       n_cpus <- parallel::detectCores() - 1
@@ -26,23 +26,41 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
     n_cpus <- 1
   }
   
-  y <- sort(unique(Y))[seq(1,length(unique(Y)),by=round(0.05*length(unique(Y))))]
-
-
+  Y <- as.numeric(Y)
   
-  if (is.null(Z)){
-    modelmat <- model.matrix(Y~X)
+  if (space_y){
+    y <- seq(min(unique(Y)),max(unique(Y)),length.out=number_y)
   }
   else{
-    modelmat <- model.matrix(Y~X+Z)
+    y <- sort(unique(Y))
   }
   
-  beta <- rep(NA,length(y))
-  for (i in 1:length(y)){
-    indi_Y <- 1*(Y<=y[i])
-    reg <- lm(indi_Y ~ 1 + modelmat[,-1])
-    beta[i] <- reg$coefficients[2]
+
+  if (is.null(Z)){ 
+    colnames(X) <- sapply(1:ncol(X), function(i){paste0('X',i)})
+    modelmat <- model.matrix(~.,data=X)
   }
+  
+  # with covariates Z
+  else{
+    colnames(X) <- sapply(1:ncol(X), function(i){paste0('X',i)})
+    colnames(Z) <- sapply(1:ncol(Z), function(i){paste0('Z',i)})
+    modelmat <- model.matrix(~.,data=cbind(X,Z))
+  }
+  
+  ind_X <- which(substring(colnames(modelmat),1,1)=="X")
+  
+  beta <- matrix(NA,(length(y)-1),length(ind_X))
+  indi_pi <- matrix(NA,length(Y),(length(y)-1))
+  
+  for (i in 1:(length(y)-1)){ # on fait varier le seuil
+    indi_Y <- 1*(Y<=y[i])
+    indi_pi[,i] <- indi_Y
+    reg <- lm(indi_Y ~ as.matrix(modelmat[,-1]))
+    beta[i,] <- reg$coefficients[ind_X]
+  }
+  
+  beta <- as.vector(beta)
   
   z <- sqrt(length(Y))*(beta[-length(y)])
   STAT_obs <- sum(t(z)*z)
@@ -52,24 +70,34 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
       
       results <- foreach(i = 1:n_perm, .combine = 'c') %dopar% {
         
-        X_star <- sample(X)
-        modelmat_perm <- model.matrix(Y~X_star)
-        beta_perm<- rep(NA,length(y))
+        X_star <- data.frame(X=X[sample(1:nrow(X)),])
+        #colnames(X_star) <- sapply(1:ncol(X), function(i){paste0('X',i)})
+        modelmat_perm <- model.matrix(~.,data=X_star)
+        beta_perm <- matrix(NA,(length(y)-1),length(ind_X))
+        indi_pi <- matrix(NA,length(Y),(length(y)-1))
         
-        for (i in 1:length(y)){
+        for (i in 1:(length(y)-1)){ # on fait varier le seuil
           indi_Y <- 1*(Y<=y[i])
-          reg <- lm(indi_Y ~ 1 + modelmat_perm[,-1])
-          beta_perm[i] <- reg$coefficients[2]
+          indi_pi[,i] <- indi_Y
+          reg <- lm(indi_Y ~ as.matrix(modelmat_perm[,-1]))
+          beta_perm[i,] <- reg$coefficients[ind_X]
         }
         
+        beta_perm <- as.vector(beta_perm)
         z <- sqrt(length(Y))*(beta_perm[-length(y)])
         STAT_perm <- sum(t(z)*z)
+        STAT_perm
       }
     }
     
     else{
       
+      warning("X and Z must be univariate. The permutation test will soon be improved to handle multivariate variables.")
+      stopifnot(ncol(X)==1)
+      stopifnot(ncol(Z)==1)
+      
       results <- foreach(i = 1:n_perm, .combine = 'c') %dopar% {
+        
         
         sample_X <- function(X,Z,z){
           X_sample <- rep(NA,length(Z))
@@ -79,20 +107,30 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
           return(X_sample)
         }
         
-        X_star <- switch(class(Z),
-                         "factor" = sample_X(X,Z,unique(Z)),
-                         "numeric" = perm_cont(Y,X,Z))
-        
-        modelmat_perm <- model.matrix(Y~X_star+Z)
-        
-        for (i in 1:length(y)){
-          indi_Y <- 1*(Y<=y[i])
-          reg <- lm(indi_Y ~ 1 + modelmat_perm[,-1])
-          beta_perm[i] <- reg$coefficients[2]
+        X_star <- switch(class(Z[,1]),
+                         "factor" = sample_X(X[,1],as.numeric(Z[,1]),unique(as.numeric(Z[,1]))), # vérifier
+                         "numeric" = perm_cont(Y,as.numeric(X[,1]),as.numeric(Z[,1])))
+        if (is.factor(X[,1])){
+          X_star <- data.frame(X=as.factor(X_star))
         }
         
+        X_star <- data.frame(X=X_star)
+        #colnames(X_star) <- sapply(1:ncol(X), function(i){paste0('X',i)})
+        modelmat_perm <- model.matrix(~.,data=cbind(X_star,Z))
+        beta_perm <- matrix(NA,(length(y)-1),length(ind_X))
+        indi_pi <- matrix(NA,length(Y),(length(y)-1))
+        
+        for (i in 1:(length(y)-1)){
+          indi_Y <- 1*(Y<=y[i])
+          indi_pi[,i] <- indi_Y
+          reg <- lm(indi_Y ~ as.matrix(modelmat_perm[,-1]))
+          beta_perm[i,] <- reg$coefficients[ind_X]
+        }
+        
+        beta_perm <- as.vector(beta_perm)
         z <- sqrt(length(Y))*(beta_perm[-length(y)])
         STAT_perm <- sum(t(z)*z)
+        STAT_perm
       }
     }
     parallel::stopCluster(cl)
@@ -108,17 +146,23 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
       
       for (k in 1:n_perm){
         
-        X_star <- sample(X)
-        modelmat_perm <- model.matrix(Y~X_star)
-        beta_perm <- rep(NA,length(y))
+        X_star <- data.frame(X=X[sample(1:nrow(X)),])
+        #colnames(X_star) <- sapply(1:ncol(X), function(i){paste0('X',i)})
+        modelmat_perm <- model.matrix(~.,data=X_star)
+        beta_perm <- matrix(NA,(length(y)-1),length(ind_X))
+        indi_pi <- matrix(NA,length(Y),(length(y)-1))
         
-        for (i in 1:length(y)){
+        for (i in 1:(length(y)-1)){ # on fait varier le seuil
           indi_Y <- 1*(Y<=y[i])
-          reg <- lm(indi_Y ~ 1 + modelmat_perm[,-1])
-          beta_perm[i] <- reg$coefficients[2]
+          indi_pi[,i] <- indi_Y
+          reg <- lm(indi_Y ~ as.matrix(modelmat_perm[,-1]))
+          beta_perm[i,] <- reg$coefficients[ind_X]
         }
+        
+        beta_perm <- as.vector(beta_perm)
         z <- sqrt(length(Y))*(beta_perm[-length(y)])
         STAT_perm[k] <- sum(t(z)*z)
+        
       }
     }
     
@@ -136,18 +180,27 @@ test_perm <- function(Y, X, Z=NULL, n_perm=100, parallel = FALSE, n_cpus = NULL)
           return(X_sample)
         }
         
-        X_star <- switch(class(Z),
-                         "factor" = sample_X(X,Z,unique(Z)),
-                         "numeric" = perm_cont(Y,X,Z))
+        X_star <- switch(class(Z[,1]),
+                         "factor" = sample_X(X[,1],as.numeric(Z[,1]),unique(as.numeric(Z[,1]))), # vérifier
+                         "numeric" = perm_cont(Y,as.numeric(X[,1]),as.numeric(Z[,1])))
         
-        modelmat_perm <- model.matrix(Y~X_star+Z)
-        beta_perm <- rep(NA,length(y))
-        
-        for (i in 1:length(y)){
-          indi_Y <- 1*(Y<=y[i])
-          reg <- lm(indi_Y ~ 1 + modelmat_perm[,-1])
-          beta_perm[i] <- reg$coefficients[2]
+        if (is.factor(X[,1])){
+          X_star <- data.frame(X=as.factor(X_star))
         }
+
+        #colnames(X_star) <- sapply(1:ncol(X), function(i){paste0('X',i)})
+        modelmat_perm <- model.matrix(~.,data=cbind(X_star,Z))
+        beta_perm <- matrix(NA,(length(y)-1),length(ind_X))
+        indi_pi <- matrix(NA,length(Y),(length(y)-1))
+        
+        for (i in 1:(length(y)-1)){
+          indi_Y <- 1*(Y<=y[i])
+          indi_pi[,i] <- indi_Y
+          reg <- lm(indi_Y ~ as.matrix(modelmat_perm[,-1]))
+          beta_perm[i,] <- reg$coefficients[ind_X]
+        }
+        
+        beta_perm <- as.vector(beta_perm)
         z <- sqrt(length(Y))*(beta_perm[-length(y)])
         STAT_perm[k] <- sum(t(z)*z)
       }

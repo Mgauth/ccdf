@@ -49,6 +49,13 @@
 #'\code{parallel} is \code{TRUE}.
 #'Default is \code{parallel::detectCores() - 1}.
 #'
+#'@param space_y a logical flag indicating whether the y thresholds are spaced. 
+#'When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
+#'the maximum of the observations is used. Default is \code{FALSE}.
+#'
+#'#'@param number_y a integer indicating the number of y thresholds (and therefore
+#' the number of regressions) to perform the test. Default is \code{NULL}.
+#'
 #'@import foreach
 #'@import doParallel
 #'@import CompQuadForm
@@ -82,7 +89,7 @@
 ccdf_testing <- function(exprmat = NULL,
                          variable2test = NULL,
                          covariate = NULL,
-                         method = c("logistic regression","linear regression"),
+                         method = c("linear regression","logistic regression"),
                          distance = c("L2","L1","L_sup"),
                          test = c("asymptotic","permutations","dist_permutations"),
                          n_perm = 100,
@@ -91,27 +98,20 @@ ccdf_testing <- function(exprmat = NULL,
                          parallel = TRUE,
                          n_cpus = NULL,
                          fast = TRUE,
-                         adaptive=FALSE){
+                         adaptive = FALSE,
+                         space_y = FALSE,
+                         number_y = NULL){
   
   # check
-  
-  stopifnot(is.matrix(exprmat) | is.data.frame(exprmat))
-  stopifnot(is.factor(variable2test) | is.numeric(variable2test))
-  stopifnot(is.null(dim(variable2test)))
-  stopifnot(is.factor(covariate) | is.numeric(covariate) | is.null(covariate))
-  stopifnot(is.null(dim(covariate)))
+  stopifnot(is.data.frame(exprmat))
+  stopifnot(is.data.frame(variable2test))
+  stopifnot(is.data.frame(variable2test))
   stopifnot(is.logical(parallel))
   stopifnot(is.logical(fast))
   stopifnot(is.logical(adaptive))
   stopifnot(is.numeric(n_perm))
   
-  if (is.data.frame(exprmat)){
-    genes_names <- rownames(exprmat)
-    exprmat <- as.matrix(exprmat)
-  }
-  else{
-    genes_names <- c(1:nrow(exprmat))
-  }
+  genes_names <- rownames(exprmat)
   
   if (sum(is.na(exprmat)) > 1) {
     warning("'y' contains", sum(is.na(y)), "NA values. ",
@@ -123,7 +123,7 @@ ccdf_testing <- function(exprmat = NULL,
   
   
   # checking for 0 variance genes
-  v_g <- matrixStats::rowVars(exprmat)
+  v_g <- matrixStats::rowVars(as.matrix(exprmat))
   if(sum(v_g==0) > 0){
     warning("Removing ", sum(v_g==0), " genes with 0 variance from ",
             "the testing procedure.\n",
@@ -136,7 +136,7 @@ ccdf_testing <- function(exprmat = NULL,
   if (length(method) > 1) {
     method <- method[1]
   }
-  stopifnot(method %in% c("logistic regression","linear regression"))
+  stopifnot(method %in% c("linear regression","logistic regression"))
   
   if (length(test) > 1) {
     test <- test[1]
@@ -148,24 +148,34 @@ ccdf_testing <- function(exprmat = NULL,
   }
   stopifnot(distance %in% c("L2","L1","L_sup"))
   
-  if ((length(n_perm_adaptive)!=(length(thresholds)+1))){
-    warning("length of thresholds + 1 must be equal to length of n_perm_adaptive. \n",
-            "Consider using the default parameters.")
-  }
-  
   if (test == "permutations"){
-    N_possible_perms <- factorial(ncol(exprmat))
-    if (n_perm > N_possible_perms) {
-      warning("The number of permutations requested 'n_perm' is ",
-              n_perm, "which is larger than the total number of ",
-              "existing permutations ", N_possible_perms,
-              ". Try a lower number for 'n_perm' (currently ",
-              "running with 'nperm=", N_possible_perms, "').")
-      n_perm <- N_possible_perms
+    
+    if (adaptive){
+      if ((length(n_perm_adaptive)!=(length(thresholds)+1))){
+        warning("length of thresholds + 1 must be equal to length of n_perm_adaptive. \n",
+              "Consider using the default parameters.")
+      }
+    }
+    
+    else{
+      N_possible_perms <- factorial(ncol(exprmat))
+      if (n_perm > N_possible_perms){
+        warning("The number of permutations requested 'n_perm' is ",
+                n_perm, "which is larger than the total number of ",
+                "existing permutations ", N_possible_perms,
+                ". Try a lower number for 'n_perm' (currently ",
+                "running with 'nperm=", N_possible_perms, "').")
+        n_perm <- N_possible_perms
+      }
     }
   }
   
-  
+  if (space_y){
+    if (is.null(number_y)){
+      warning("Missing argument", number_y, ". No spacing is used.")
+      space_y <- FALSE
+    }
+  }
   
   # parallel
   
@@ -260,7 +270,9 @@ ccdf_testing <- function(exprmat = NULL,
         Z = covariate,
         n_perm = n_perm_adaptive[1],
         parallel = FALSE,
-        n_cpus = 1)$score},cl=n_cpus)
+        n_cpus = 1,
+        space_y = space_y, 
+        number_y = number_y)$score},cl=n_cpus)
       perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
       for (k in 1:length(thresholds)){
@@ -279,7 +291,9 @@ ccdf_testing <- function(exprmat = NULL,
             Z = covariate,
             n_perm = n_perm_adaptive[k+1],
             parallel = FALSE,
-            n_cpus = 1)$score},cl=n_cpus)
+            n_cpus = 1,
+            space_y = space_y, 
+            number_y = number_y)$score},cl=n_cpus)
           res[index] <- res[index] + res_perm
           perm[index] <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
         }
@@ -300,7 +314,9 @@ ccdf_testing <- function(exprmat = NULL,
                   Z = covariate,
                   n_perm = n_perm,
                   parallel = FALSE,
-                  n_cpus = 1)},cl=n_cpus))
+                  n_cpus = 1,
+                  space_y = space_y, 
+                  number_y = number_y)},cl=n_cpus))
       
       #res <- as.vector(unlist(res))
       
@@ -316,18 +332,24 @@ ccdf_testing <- function(exprmat = NULL,
     Y <- exprmat
     X <- variable2test
     Z <- covariate
-    res <- do.call("rbind",pbapply::pblapply(1:nrow(Y), function(i){test_asymp(Y[i,], X, Z)}, cl=n_cpus))
+    res <- do.call("rbind",pbapply::pblapply(1:nrow(Y), function(i){test_asymp(Y[i,], X, Z, 
+                                                                               space_y = space_y, 
+                                                                               number_y = number_y)}, cl=n_cpus))
     df <- data.frame(raw_pval = res$raw_pval, adj_pval = p.adjust(res$raw_pval, method = "BH"), test_statistic = res$Stat)
   }
   
   #rownames(df) <- genes_names
   
   if (adaptive == TRUE){
-    n_perm <- n_perm_adaptive
+    n_perm <- cumsum(n_perm_adaptive)
   }
   
   if (test == "asymptotic"){
     n_perm <- NA
+  }
+  
+  if (parallel){
+    parallel::stopCluster(cl)
   }
   
   return(list(which_test = test,
