@@ -4,7 +4,13 @@
 \alias{test_asymp}
 \title{Asymptotic test}
 \usage{
-test_asymp(Y, X, Z = NULL)
+test_asymp(
+  Y,
+  X,
+  Z = NULL,
+  space_y = FALSE,
+  number_y = length(unique(as.numeric(Y)))
+)
 }
 \arguments{
 \item{X}{}

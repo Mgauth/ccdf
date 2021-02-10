@@ -8,7 +8,7 @@ ccdf_testing(
   exprmat = NULL,
   variable2test = NULL,
   covariate = NULL,
-  method = c("logistic regression", "linear regression"),
+  method = c("linear regression", "logistic regression"),
   distance = c("L2", "L1", "L_sup"),
   test = c("asymptotic", "permutations", "dist_permutations"),
   n_perm = 100,
@@ -17,7 +17,9 @@ ccdf_testing(
   parallel = TRUE,
   n_cpus = NULL,
   fast = TRUE,
-  adaptive = FALSE
+  adaptive = FALSE,
+  space_y = FALSE,
+  number_y = NULL
 )
 }
 \arguments{
@@ -67,6 +69,13 @@ Default is \code{TRUE}.}
 
 \item{adaptive}{a logical flag indicating whether adaptive permutations
 should be performed. Default is \code{FALSE}.}
+
+\item{space_y}{a logical flag indicating whether the y thresholds are spaced. 
+When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
+the maximum of the observations is used. Default is \code{FALSE}.
+
+#'@param number_y a integer indicating the number of y thresholds (and therefore
+the number of regressions) to perform the test. Default is \code{NULL}.}
 }
 \value{
 A list with the following elements:\itemize{
@@ -87,7 +96,7 @@ Complex hypothesis testing using (un)conditional independence test
 }
 \examples{
 X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
-Y <- replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1)))
+Y <- replicate(1000, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1)))
 Y <- t(Y)
 Z <- rnorm(n = 100)
 res <- ccdf_testing(exprmat=Y, variable2test=X, test="asymptotic") # asymptotic test
