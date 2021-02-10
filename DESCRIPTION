@@ -1,7 +1,7 @@
 Package: ccdf
 Type: Package
 Title: Complex Hypothesis Testing Through Conditional Cumulative Distribution Function Estimation (Distribution-Free Single-cell Differential Expression Analysis)
-Version: 0.2.0
+Version: 1.0.1
 Author: Marine Gauthier, Boris Hejblum, Denis Agniel, Rodolphe Thiébaut
 Imports:
     pbapply,
