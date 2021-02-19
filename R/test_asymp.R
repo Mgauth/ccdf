@@ -68,6 +68,23 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
     Sigma <- (1/length(Y))*(H_square*Sigma)
   }
   else{
+    # temp_Sigma <-  lapply(1:ncol(H), function(k){sapply(1:nrow(H), function(s){sapply(1:nrow(H), function(r){H[s,k]*H[r,k]})})})
+    # sum_temp_Sigma <- temp_Sigma[[1]]
+    # for (i in 2:ncol(H)){
+    #   sum_temp_Sigma <- sum_temp_Sigma + temp_Sigma[[i]]
+    # }
+    # 
+    # ind_sig <- rep(1:(length(y)-1),length(ind_X))
+    # Sigma <- sapply(1:((length(y)-1)*length(ind_X)), function(i){sapply(1:((length(y)-1)*length(ind_X)), function(j){
+    #   if (i<=j){
+    #     sum_temp_Sigma[floor(i/(length(y))+1),floor(j/(length(y))+1)]*(prop[ind_sig[i]]-(prop[ind_sig[j]]*prop[ind_sig[i]]))
+    #   }
+    #   else{
+    #     sum_temp_Sigma[floor(i/(length(y))+1),floor(j/(length(y))+1)]*(prop[ind_sig[j]]-(prop[ind_sig[j]]*prop[ind_sig[i]]))
+    #   }
+    # })})
+    # Sigma <- (1/length(Y))*Sigma
+    
     temp_Sigma <-  lapply(1:ncol(H), function(k){sapply(1:nrow(H), function(s){sapply(1:nrow(H), function(r){H[s,k]*H[r,k]})})})
     sum_temp_Sigma <- temp_Sigma[[1]]
     for (i in 2:ncol(H)){
@@ -75,14 +92,18 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
     }
     
     ind_sig <- rep(1:(length(y)-1),length(ind_X))
-    Sigma <- sapply(1:((length(y)-1)*length(ind_X)), function(i){sapply(1:((length(y)-1)*length(ind_X)), function(j){
-      if (i<=j){
-        sum_temp_Sigma[floor(i/(length(y))+1),floor(j/(length(y))+1)]*(prop[ind_sig[i]]-(prop[ind_sig[j]]*prop[ind_sig[i]]))
+    
+    Sigma <- matrix(NA,((length(y)-1)*length(ind_X)),((length(y)-1)*length(ind_X)))
+    for (i in 1:((length(y)-1)*length(ind_X))){
+      for (j in 1:((length(y)-1)*length(ind_X))){
+        if (i<=j){
+          Sigma[i,j] <- sum_temp_Sigma[floor(i/(length(y))+1),floor(j/(length(y))+1)]*(prop[ind_sig[i]]-(prop[ind_sig[j]]*prop[ind_sig[i]]))
+        }
+        else{
+          Sigma[i,j] <- sum_temp_Sigma[floor(i/(length(y))+1),floor(j/(length(y))+1)]*(prop[ind_sig[j]]-(prop[ind_sig[j]]*prop[ind_sig[i]]))
+        }
       }
-      else{
-        sum_temp_Sigma[floor(i/(length(y))+1),floor(j/(length(y))+1)]*(prop[ind_sig[j]]-(prop[ind_sig[j]]*prop[ind_sig[i]]))
-      }
-    })})
+    }
     Sigma <- (1/length(Y))*Sigma
   }
 
