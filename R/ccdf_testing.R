@@ -105,7 +105,7 @@ ccdf_testing <- function(exprmat = NULL,
   # check
   stopifnot(is.data.frame(exprmat))
   stopifnot(is.data.frame(variable2test))
-  stopifnot(is.data.frame(variable2test))
+  stopifnot(is.data.frame(covariate) | is.null(covariate))
   stopifnot(is.logical(parallel))
   stopifnot(is.logical(fast))
   stopifnot(is.logical(adaptive))

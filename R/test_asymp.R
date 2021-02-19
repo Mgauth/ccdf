@@ -35,8 +35,8 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
     modelmat <- model.matrix(~.,data=cbind(X,Z))
   }
   
-  
   ind_X <- which(substring(colnames(modelmat),1,1)=="X")
+  #nb_fact <- colSums(modelmat[,ind_X])
   
   beta <- matrix(NA,(length(y)-1),length(ind_X))
   indi_pi <- matrix(NA,length(Y),(length(y)-1))
@@ -53,31 +53,61 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   
   beta <- as.vector(beta)
   prop <- colMeans(indi_pi)
-  
-  
-  Sigma <- sapply(1:(length(y)-1), function(i){sapply(1:(length(y)-1), function(j){
-    if (i<=j){
-      prop[i]-(prop[j]*prop[i])
+  H <- H[ind_X,]
+
+  if (is.null(dim(H))){
+    H_square <- sum(H^2)
+    Sigma <- sapply(1:(length(y)-1), function(i){sapply(1:((length(y)-1)*length(ind_X)), function(j){
+      if (i<=j){
+        (prop[i]-(prop[j]*prop[i]))
+      }
+      else{
+        (prop[j]-(prop[j]*prop[i]))
+      }
+    })})
+    Sigma <- (1/length(Y))*(H_square*Sigma)
+  }
+  else{
+    temp_Sigma <-  lapply(1:ncol(H), function(k){sapply(1:nrow(H), function(s){sapply(1:nrow(H), function(r){H[s,k]*H[r,k]})})})
+    sum_temp_Sigma <- temp_Sigma[[1]]
+    for (i in 2:ncol(H)){
+      sum_temp_Sigma <- sum_temp_Sigma + temp_Sigma[[i]]
     }
-    else{
-      prop[j]-(prop[j]*prop[i])
-    }
-  })})
+    
+    ind_sig <- rep(1:(length(y)-1),length(ind_X))
+    Sigma <- sapply(1:((length(y)-1)*length(ind_X)), function(i){sapply(1:((length(y)-1)*length(ind_X)), function(j){
+      if (i<=j){
+        sum_temp_Sigma[floor(i/(length(y))+1),floor(j/(length(y))+1)]*(prop[ind_sig[i]]-(prop[ind_sig[j]]*prop[ind_sig[i]]))
+      }
+      else{
+        sum_temp_Sigma[floor(i/(length(y))+1),floor(j/(length(y))+1)]*(prop[ind_sig[j]]-(prop[ind_sig[j]]*prop[ind_sig[i]]))
+      }
+    })})
+    Sigma <- (1/length(Y))*Sigma
+  }
+
   
   # if(length(ind_X)==1){
   #   H_square <- sum(H[ind_X,]^2)
   #   Sigma <- (1/length(Y))*(H_square*Sigma)
   # }
   
-  H_square <- sapply(ind_X,function(i){sum(H[i,]^2)})
-  Sigma <-  lapply(1:length(ind_X),function(i){(1/length(Y))*(H_square[i]*Sigma)})
+
+  #H_square <- h_i^2
+  #Sigma <-  lapply(1:length(H_square),function(i){(H_square[i]*Sigma)})
+  #Sigma_sum <- matrix(0,length(ind_X)*(length(y)-1),length(ind_X)*(length(y)-1))
+  #for (i in 1:length(H_square)){
+  #  Sigma_sum <- Sigma_sum + Sigma[[i]]
+  #}
+  #Sigma_sum <- (1/length(H_square))*Sigma_sum
 
   
   #Sigma <- sapply(1:size_X,function(i){(1/length(Y))*(H_square[i]*Sigma[(1+(length(y)*i)-length(y)):(length(y)*i),(1+(length(y)*i)-length(y)):(length(y)*i)])}) 
   
-  decomp <- lapply(1:length(ind_X),function(i){eigen(Sigma[[i]])}) 
-  A <- matrix(0,length(ind_X)*(length(y)-1),length(ind_X)*(length(y)-1))
-  diag(A) <- c(sapply(1:length(ind_X),function(i){decomp[[i]]$values})) 
+  #decomp <- lapply(1:length(ind_X),function(i){eigen(Sigma[[i]])}) 
+  decomp <- eigen(Sigma)
+  A <- matrix(0,(length(ind_X)*(length(y)-1)),(length(ind_X)*(length(y)-1)))
+  diag(A) <- decomp$values
   z <- sqrt(length(Y))*beta
   STAT <- sum(t(z)*z)
   
