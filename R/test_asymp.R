@@ -17,6 +17,7 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   
   if (space_y){
     y <- seq(min(unique(Y)),max(unique(Y)),length.out=number_y)
+    
   }
   else{
     y <- sort(unique(Y))
@@ -43,17 +44,18 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   
   Phi <- (1/length(Y))*(t(as.matrix(modelmat))%*%as.matrix(modelmat))
   H <- (solve(Phi)%*%t(as.matrix(modelmat))) # ginv
+  H <- H[ind_X,]
   
   for (i in 1:(length(y)-1)){ # on fait varier le seuil
     indi_Y <- 1*(Y<=y[i])
     indi_pi[,i] <- indi_Y
+    #beta[i,] <- (1/length(indi_Y))*rowSums(sapply(1:length(Y),function(i){H[i]*indi_pi[i,]}))
     reg <- lm(indi_Y ~ as.matrix(modelmat[,-1]))
     beta[i,] <- reg$coefficients[ind_X]
   }
   
   beta <- as.vector(beta)
   prop <- colMeans(indi_pi)
-  H <- H[ind_X,]
 
   if (is.null(dim(H))){
     H_square <- sum(H^2)
@@ -129,7 +131,7 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   decomp <- eigen(Sigma)
   A <- matrix(0,(length(ind_X)*(length(y)-1)),(length(ind_X)*(length(y)-1)))
   diag(A) <- decomp$values
-  z <- sqrt(length(Y))*beta
+  z <- (sqrt(length(Y)))*beta
   STAT <- sum(t(z)*z)
   
   param <- list(lim=15000,acc= 5e-04)

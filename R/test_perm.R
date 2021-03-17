@@ -115,7 +115,7 @@ test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = N
         
         X_star <- switch(class(Z[,1]),
                          "factor" = sample_X(X[,1],as.numeric(Z[,1]),unique(as.numeric(Z[,1]))), # vérifier
-                         "numeric" = perm_cont(Y,as.numeric(X[,1]),as.numeric(Z[,1])))
+                         "numeric" = perm_cont(Y,as.numeric(levels(X[,1]))[X[,1]],as.numeric(Z[,1])))
         if (is.factor(X[,1])){
           X_star <- data.frame(X=as.factor(X_star))
         }
@@ -188,7 +188,7 @@ test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = N
         
         X_star <- switch(class(Z[,1]),
                          "factor" = sample_X(X[,1],as.numeric(Z[,1]),unique(as.numeric(Z[,1]))), # vérifier
-                         "numeric" = perm_cont(Y,as.numeric(X[,1]),as.numeric(Z[,1])))
+                         "numeric" = perm_cont(Y,as.numeric(levels(X[,1]))[X[,1]],as.numeric(Z[,1])))
         
         if (is.factor(X[,1])){
           X_star <- data.frame(X=as.factor(X_star))
