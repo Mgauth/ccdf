@@ -98,9 +98,9 @@ test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = N
     
     else{
       
-      warning("X and Z must be univariate. The permutation test will soon be improved to handle multivariate variables.")
-      stopifnot(ncol(X)==1)
-      stopifnot(ncol(Z)==1)
+      if ((ncol(X)!=1)|ncol(Z)!=1){
+        stop("X and Z must be univariate. The permutation test will soon be improved to handle multivariate variable of interest and multivariate covariate.")
+      }
       
       results <- foreach(i = 1:n_perm, .combine = 'c') %dopar% {
         
