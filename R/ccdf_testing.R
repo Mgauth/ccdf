@@ -211,8 +211,10 @@ ccdf_testing <- function(exprmat = NULL,
         
         index <- which(((res+1)/(perm+1))<thresholds[k])
         
-        if (length(index)==0){break}
-        
+        if (length(unique(((res+1)/(perm+1))<thresholds[k]))==1 & unique(((res+1)/(perm+1))<thresholds[k])==FALSE){
+          break
+        }
+
         else{
           
           print(paste("Computing", sum(n_perm_adaptive[1:(k+1)]), "permutations..."))
