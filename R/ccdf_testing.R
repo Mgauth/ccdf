@@ -53,8 +53,13 @@
 #'When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 #'the maximum of the observations is used. Default is \code{FALSE}.
 #'
-#'#'@param threshold_y a integer indicating the number of y thresholds (and therefore
-#' the number of regressions) to perform the test. Default is \code{NULL}.
+#'@param prop_y a number between 0.01 and 1 indicating the proportion of y thresholds (and therefore
+#'the number of regressions) to perform the test. Default is \code{0.5}.
+#' 
+#'@param log a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
+#'When \code{log} is \code{TRUE}, a regular sequence between the minimum and
+#'the maximum in the logarithmic scale of the observations is used. If the observations
+#'are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.
 #'
 #'@import foreach
 #'@import doParallel
@@ -100,7 +105,8 @@ ccdf_testing <- function(exprmat = NULL,
                          fast = TRUE,
                          adaptive = FALSE,
                          space_y = FALSE,
-                         threshold_y = NULL){
+                         prop_y = 0.5,
+                         log = FALSE){
   
   # check
   stopifnot(is.data.frame(exprmat))
@@ -171,8 +177,8 @@ ccdf_testing <- function(exprmat = NULL,
   }
   
   if (space_y){
-    if (is.null(threshold_y)){
-      warning("Missing argument", threshold_y, ". No spacing is used.")
+    if (is.null(prop_y)){
+      warning("Missing argument", prop_y, ". No spacing is used.")
       space_y <- FALSE
     }
   }
@@ -273,7 +279,8 @@ ccdf_testing <- function(exprmat = NULL,
         parallel = FALSE,
         n_cpus = 1,
         space_y = space_y, 
-        threshold_y = threshold_y)$score},cl=n_cpus)
+        prop_y = prop_y,
+        log = log)$score},cl=n_cpus)
       perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
       for (k in 1:length(thresholds)){
@@ -296,7 +303,8 @@ ccdf_testing <- function(exprmat = NULL,
             parallel = FALSE,
             n_cpus = 1,
             space_y = space_y, 
-            threshold_y = threshold_y)$score},cl=n_cpus)
+            prop_y = prop_y,
+            log = log)$score},cl=n_cpus)
           res[index] <- res[index] + res_perm
           perm[index] <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
         }
@@ -319,7 +327,8 @@ ccdf_testing <- function(exprmat = NULL,
                   parallel = FALSE,
                   n_cpus = 1,
                   space_y = space_y, 
-                  threshold_y = threshold_y)},cl=n_cpus))
+                  prop_y = prop_y,
+                  log = log)},cl=n_cpus))
       
       #res <- as.vector(unlist(res))
       
@@ -337,7 +346,8 @@ ccdf_testing <- function(exprmat = NULL,
     Z <- covariate
     res <- do.call("rbind",pbapply::pblapply(1:nrow(Y), function(i){test_asymp(Y[i,], X, Z, 
                                                                                space_y = space_y, 
-                                                                               threshold_y = threshold_y)}, cl=n_cpus))
+                                                                               prop_y = prop_y,
+                                                                               log = log)}, cl=n_cpus))
     df <- data.frame(raw_pval = res$raw_pval, adj_pval = p.adjust(res$raw_pval, method = "BH"), test_statistic = res$Stat)
   }
   

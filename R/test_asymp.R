@@ -11,13 +11,17 @@
 #'
 
 
-test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, threshold_y = length(unique(as.numeric(Y)))){
-
+test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, prop_y = 0.5, log = FALSE){
+  
   Y <- as.numeric(Y)
   
   if (space_y){
-    y <- seq(min(unique(Y)),max(unique(Y)),length.out=threshold_y)
-    
+    if (log){
+      y <- exp(seq(log(min(x)),log(max(x)),length.out=length(unique(Y))*prop_y))
+    }
+    else{    
+      y <- seq(min(unique(Y)),max(unique(Y)),length.out=length(unique(Y))*prop_y)
+    }
   }
   else{
     y <- sort(unique(Y))
