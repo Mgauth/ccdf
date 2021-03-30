@@ -53,7 +53,7 @@
 #'When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 #'the maximum of the observations is used. Default is \code{FALSE}.
 #'
-#'#'@param number_y a integer indicating the number of y thresholds (and therefore
+#'#'@param threshold_y a integer indicating the number of y thresholds (and therefore
 #' the number of regressions) to perform the test. Default is \code{NULL}.
 #'
 #'@import foreach
@@ -82,8 +82,8 @@
 #' Y <- replicate(1000, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1)))
 #' Y <- t(Y)
 #' Z <- rnorm(n = 100)
-#' res <- ccdf_testing(exprmat=Y, variable2test=X, test="asymptotic") # asymptotic test
-#' res2 <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations", adaptive=FALSE) # adaptive permutation test
+#' res <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), covariates=data.frame(Z=Z), test="asymptotic") # asymptotic test
+#' res2 <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="permutations", adaptive=FALSE) # adaptive permutation test
 
 
 ccdf_testing <- function(exprmat = NULL,
@@ -100,7 +100,7 @@ ccdf_testing <- function(exprmat = NULL,
                          fast = TRUE,
                          adaptive = FALSE,
                          space_y = FALSE,
-                         number_y = NULL){
+                         threshold_y = NULL){
   
   # check
   stopifnot(is.data.frame(exprmat))
@@ -171,8 +171,8 @@ ccdf_testing <- function(exprmat = NULL,
   }
   
   if (space_y){
-    if (is.null(number_y)){
-      warning("Missing argument", number_y, ". No spacing is used.")
+    if (is.null(threshold_y)){
+      warning("Missing argument", threshold_y, ". No spacing is used.")
       space_y <- FALSE
     }
   }
@@ -229,7 +229,6 @@ ccdf_testing <- function(exprmat = NULL,
           perm[index] <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
         }
         
-        
       }
       
       df <- data.frame(raw_pval = (res+1)/(perm+1),
@@ -274,7 +273,7 @@ ccdf_testing <- function(exprmat = NULL,
         parallel = FALSE,
         n_cpus = 1,
         space_y = space_y, 
-        number_y = number_y)$score},cl=n_cpus)
+        threshold_y = threshold_y)$score},cl=n_cpus)
       perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
       for (k in 1:length(thresholds)){
@@ -295,7 +294,7 @@ ccdf_testing <- function(exprmat = NULL,
             parallel = FALSE,
             n_cpus = 1,
             space_y = space_y, 
-            number_y = number_y)$score},cl=n_cpus)
+            threshold_y = threshold_y)$score},cl=n_cpus)
           res[index] <- res[index] + res_perm
           perm[index] <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
         }
@@ -318,7 +317,7 @@ ccdf_testing <- function(exprmat = NULL,
                   parallel = FALSE,
                   n_cpus = 1,
                   space_y = space_y, 
-                  number_y = number_y)},cl=n_cpus))
+                  threshold_y = threshold_y)},cl=n_cpus))
       
       #res <- as.vector(unlist(res))
       
@@ -336,7 +335,7 @@ ccdf_testing <- function(exprmat = NULL,
     Z <- covariate
     res <- do.call("rbind",pbapply::pblapply(1:nrow(Y), function(i){test_asymp(Y[i,], X, Z, 
                                                                                space_y = space_y, 
-                                                                               number_y = number_y)}, cl=n_cpus))
+                                                                               threshold_y = threshold_y)}, cl=n_cpus))
     df <- data.frame(raw_pval = res$raw_pval, adj_pval = p.adjust(res$raw_pval, method = "BH"), test_statistic = res$Stat)
   }
   
