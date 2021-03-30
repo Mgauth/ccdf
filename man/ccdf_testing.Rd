@@ -19,7 +19,8 @@ ccdf_testing(
   fast = TRUE,
   adaptive = FALSE,
   space_y = FALSE,
-  number_y = NULL
+  prop_y = 0.5,
+  log = FALSE
 )
 }
 \arguments{
@@ -72,10 +73,15 @@ should be performed. Default is \code{FALSE}.}
 
 \item{space_y}{a logical flag indicating whether the y thresholds are spaced. 
 When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
-the maximum of the observations is used. Default is \code{FALSE}.
+the maximum of the observations is used. Default is \code{FALSE}.}
 
-#'@param number_y a integer indicating the number of y thresholds (and therefore
-the number of regressions) to perform the test. Default is \code{NULL}.}
+\item{prop_y}{a number between 0.01 and 1 indicating the proportion of y thresholds (and therefore
+the number of regressions) to perform the test. Default is \code{0.5}.}
+
+\item{log}{a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
+When \code{log} is \code{TRUE}, a regular sequence between the minimum and
+the maximum in the logarithmic scale of the observations is used. If the observations
+are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.}
 }
 \value{
 A list with the following elements:\itemize{
@@ -99,6 +105,6 @@ X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
 Y <- replicate(1000, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1)))
 Y <- t(Y)
 Z <- rnorm(n = 100)
-res <- ccdf_testing(exprmat=Y, variable2test=X, test="asymptotic") # asymptotic test
-res2 <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations", adaptive=FALSE) # adaptive permutation test
+res <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), covariates=data.frame(Z=Z), test="asymptotic") # asymptotic test
+res2 <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="permutations", adaptive=FALSE) # adaptive permutation test
 }

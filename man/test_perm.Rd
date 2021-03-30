@@ -12,11 +12,17 @@ test_perm(
   parallel = FALSE,
   n_cpus = NULL,
   space_y = FALSE,
-  number_y = length(unique(Y))
+  prop_y = length(unique(Y)),
+  log = FALSE
 )
 }
 \arguments{
-\item{n_cpus}{}
+\item{space_y}{a logical flag indicating whether the y thresholds are spaced. 
+When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
+the maximum of the observations is used. Default is \code{FALSE}.}
+
+\item{prop_y}{a integer indicating the number of y thresholds (and therefore
+the number of regressions) to perform the test. Default is \code{NULL}.}
 }
 \description{
 Permutation test using the test statistic
