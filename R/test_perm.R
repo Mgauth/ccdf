@@ -10,7 +10,7 @@
 #'When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 #'the maximum of the observations is used. Default is \code{FALSE}.
 #'
-#' @param number_y a integer indicating the number of y thresholds (and therefore
+#' @param threshold_y a integer indicating the number of y thresholds (and therefore
 #' the number of regressions) to perform the test. Default is \code{NULL}.
 #'
 #' @import doParallel
@@ -19,7 +19,7 @@
 #'
 #' @export
 
-test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, number_y = length(unique(Y))){
+test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, threshold_y = length(unique(Y))){
 
   if(parallel){
     if(is.null(n_cpus)){
@@ -35,7 +35,7 @@ test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = N
   Y <- as.numeric(Y)
   
   if (space_y){
-    y <- seq(min(unique(Y)),max(unique(Y)),length.out=number_y)
+    y <- seq(min(unique(Y)),max(unique(Y)),length.out=threshold_y)
   }
   else{
     y <- sort(unique(Y))

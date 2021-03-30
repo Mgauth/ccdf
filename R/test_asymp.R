@@ -11,12 +11,12 @@
 #'
 
 
-test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique(as.numeric(Y)))){
+test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, threshold_y = length(unique(as.numeric(Y)))){
 
   Y <- as.numeric(Y)
   
   if (space_y){
-    y <- seq(min(unique(Y)),max(unique(Y)),length.out=number_y)
+    y <- seq(min(unique(Y)),max(unique(Y)),length.out=threshold_y)
     
   }
   else{
