@@ -19,7 +19,7 @@
 #'
 #' @export
 
-test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, prop_y = length(unique(Y)), log = FALSE){
+test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, prop_y = length(unique(Y)), log = FALSE, keep_zeros = keep_zeros){
 
   if(parallel){
     if(is.null(n_cpus)){
@@ -35,15 +35,30 @@ test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = N
   Y <- as.numeric(Y)
   
   if (space_y){
-    if (log){
-      y <- exp(seq(log(min(x)),log(max(x)),length.out=length(unique(Y))*prop_y))
+    if (keep_zeros){
+      if (log){
+        y <- exp(seq(log(min(Y)),log(max(Y)),length.out=length(unique(Y))*prop_y))
+      }
+      else{    
+        y <- seq(min(unique(Y)),max(unique(Y)),length.out=length(unique(Y))*prop_y)
+      }
     }
-    else{    
-      y <- seq(min(unique(Y)),max(unique(Y)),length.out=length(unique(Y))*prop_y)
+    else{
+      if (log){
+        y <- exp(seq(log(min(Y[-which(Y==0)])),log(max(Y[-which(Y==0)])),length.out=length(unique(Y))*prop_y))
+      }
+      else{    
+        y <- seq(min(unique(Y[-which(Y==0)])),max(unique(Y[-which(Y==0)])),length.out=length(unique(Y))*prop_y)
+      }
     }
   }
   else{
-    y <- sort(unique(Y))
+    if (keep_zeros){
+      y <- sort(unique(Y))
+    }
+    else{
+      y <- sort(unique(Y[-which(Y==0)]))
+    }
   }
   
 
