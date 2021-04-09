@@ -10,7 +10,7 @@
 #'When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 #'the maximum of the observations is used. Default is \code{FALSE}.
 #'
-#' @param prop_y a integer indicating the number of y thresholds (and therefore
+#' @param number_y a integer indicating the number of y thresholds (and therefore
 #' the number of regressions) to perform the test. Default is \code{NULL}.
 #'
 #' @import doParallel
@@ -19,7 +19,7 @@
 #'
 #' @export
 
-test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, prop_y = 0.5, log = FALSE, keep_zeros = TRUE){
+test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, number_y = 0.5, log = FALSE, keep_zeros = TRUE){
 
   if(parallel){
     if(is.null(n_cpus)){
@@ -37,24 +37,24 @@ test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = N
   if (space_y){
     if (keep_zeros){
       if (log){
-        y <- exp(seq(log(min(Y)),log(max(Y)),length.out=length(unique(Y))*prop_y))
+        y <- exp(seq(log(min(Y)),log(max(Y[-which.max(Y)])),length.out=number_y))
       }
       else{    
-        y <- seq(min(unique(Y)),max(unique(Y)),length.out=length(unique(Y))*prop_y)
+        y <- seq(min(unique(Y)),max(unique(Y[-which.max(Y)])),length.out=number_y)
       }
     }
     else{
       if (log){
-        y <- exp(seq(log(min(Y[-which(Y==0)])),log(max(Y[-which(Y==0)])),length.out=length(unique(Y))*prop_y))
+        y <- exp(seq(log(min(Y[-which(Y==0)])),log(max(Y[-which(Y==0)])),length.out=number_y))
       }
       else{    
-        y <- seq(min(unique(Y[-which(Y==0)])),max(unique(Y[-which(Y==0)])),length.out=length(unique(Y))*prop_y)
+        y <- seq(min(unique(Y[-which(Y==0)])),max(unique(Y[-which(Y==0)])),length.out=number_y)
       }
     }
   }
   else{
     if (keep_zeros){
-      y <- sort(unique(Y))
+      y <- sort(unique(Y[-which.max(Y)]))
     }
     else{
       y <- sort(unique(Y[-which(Y==0)]))

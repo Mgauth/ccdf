@@ -53,7 +53,7 @@
 #'When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 #'the maximum of the observations is used. Default is \code{FALSE}.
 #'
-#'@param prop_y a number between 0.01 and 1 indicating the proportion of y thresholds (and therefore
+#'@param number_y a number between 0.01 and 1 indicating the proportion of y thresholds (and therefore
 #'the number of regressions) to perform the test. Default is \code{0.5}.
 #' 
 #'@param log a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
@@ -109,7 +109,7 @@ ccdf_testing <- function(exprmat = NULL,
                          fast = TRUE,
                          adaptive = FALSE,
                          space_y = FALSE,
-                         prop_y = 0.5,
+                         number_y = ncol(exprmat),
                          log = FALSE,
                          keep_zeros = TRUE){
   
@@ -182,8 +182,8 @@ ccdf_testing <- function(exprmat = NULL,
   }
   
   if (space_y){
-    if (is.null(prop_y)){
-      warning("Missing argument", prop_y, ". No spacing is used.")
+    if (is.null(number_y)){
+      warning("Missing argument", number_y, ". No spacing is used.")
       space_y <- FALSE
     }
   }
@@ -284,7 +284,7 @@ ccdf_testing <- function(exprmat = NULL,
         parallel = FALSE,
         n_cpus = 1,
         space_y = space_y, 
-        prop_y = prop_y,
+        number_y = number_y,
         log = log,
         keep_zeros = keep_zeros)$score},cl=n_cpus)
       perm <- rep(n_perm_adaptive[1],nrow(exprmat))
@@ -304,7 +304,7 @@ ccdf_testing <- function(exprmat = NULL,
             parallel = FALSE,
             n_cpus = 1,
             space_y = space_y, 
-            prop_y = prop_y,
+            number_y = number_y,
             log = log,
             keep_zeros = keep_zeros)$score},cl=n_cpus)
           res[index] <- res[index] + res_perm
@@ -328,7 +328,7 @@ ccdf_testing <- function(exprmat = NULL,
                   parallel = FALSE,
                   n_cpus = 1,
                   space_y = space_y, 
-                  prop_y = prop_y,
+                  number_y = number_y,
                   log = log,
                   keep_zeros = keep_zeros)},cl=n_cpus))
       
@@ -348,7 +348,7 @@ ccdf_testing <- function(exprmat = NULL,
     Z <- covariate
     res <- do.call("rbind",pbapply::pblapply(1:nrow(Y), function(i){test_asymp(Y[i,], X, Z, 
                                                                                space_y = space_y, 
-                                                                               prop_y = prop_y,
+                                                                               number_y = number_y,
                                                                                log = log,
                                                                                keep_zeros = keep_zeros)}, cl=n_cpus))
     df <- data.frame(raw_pval = res$raw_pval, adj_pval = p.adjust(res$raw_pval, method = "BH"), test_statistic = res$Stat)
