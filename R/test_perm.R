@@ -19,7 +19,7 @@
 #'
 #' @export
 
-test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, prop_y = length(unique(Y)), log = FALSE, keep_zeros = keep_zeros){
+test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, prop_y = 0.5, log = FALSE, keep_zeros = TRUE){
 
   if(parallel){
     if(is.null(n_cpus)){
@@ -61,7 +61,7 @@ test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = N
     }
   }
   
-
+  
   if (is.null(Z)){ 
     colnames(X) <- sapply(1:ncol(X), function(i){paste0('X',i)})
     modelmat <- model.matrix(~.,data=X)
@@ -123,7 +123,6 @@ test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = N
       }
       
       results <- foreach(i = 1:n_perm, .combine = 'c') %dopar% {
-        
         
         sample_X <- function(X,Z,z){
           X_sample <- rep(NA,length(Z))

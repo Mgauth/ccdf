@@ -289,23 +289,18 @@ ccdf_testing <- function(exprmat = NULL,
         keep_zeros = keep_zeros)$score},cl=n_cpus)
       perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
-      for (k in 1:length(thresholds)){
-        
-        index <- which(((res+1)/(perm+1))<thresholds[k])
-        
-        if (length(unique(((res+1)/(perm+1))<thresholds[k]))==1 & unique(((res+1)/(perm+1))<thresholds[k])==FALSE){
-          break
-        }
-        
-        else{
+      index <- which(((res+1)/(perm+1))<thresholds[1])
+      k <- 1
+      
+      while (length(index)!=0 & k<=length(n_perm_adaptive)){
+
+        print(paste("Computing", sum(n_perm_adaptive[1:k]), "permutations..."))
           
-          print(paste("Computing", sum(n_perm_adaptive[1:(k+1)]), "permutations..."))
-          
-          res_perm <- pbapply::pbsapply(1:nrow(exprmat[index,]), FUN=function(i){test_perm(
+        res_perm <- pbapply::pbsapply(1:nrow(exprmat[index,]), FUN=function(i){test_perm(
             Y = exprmat[index,][i,],
             X = variable2test,
             Z = covariate,
-            n_perm = n_perm_adaptive[k+1],
+            n_perm = n_perm_adaptive[k],
             parallel = FALSE,
             n_cpus = 1,
             space_y = space_y, 
@@ -313,11 +308,10 @@ ccdf_testing <- function(exprmat = NULL,
             log = log,
             keep_zeros = keep_zeros)$score},cl=n_cpus)
           res[index] <- res[index] + res_perm
-          perm[index] <- perm[index] + rep(n_perm_adaptive[k+1],nrow(exprmat[index,]))
+          perm[index] <- perm[index] + rep(n_perm_adaptive[k],nrow(exprmat[index,]))
+          index <- which(((res+1)/(perm+1))<thresholds[k])
+          k <- k+1
         }
-        
-        
-      }
       
       df <- data.frame(raw_pval = (res+1)/(perm+1),
                        adj_pval = p.adjust((res+1)/(perm+1), method = "BH"))

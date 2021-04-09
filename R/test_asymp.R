@@ -18,10 +18,10 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, prop_y = 0.5, log = FALS
   if (space_y){
     if (keep_zeros){
       if (log){
-        y <- exp(seq(log(min(Y)),log(max(Y)),length.out=length(unique(Y))*prop_y))
+        y <- exp(seq(log(min(Y)),log(max(Y[-which.max(Y)])),length.out=length(unique(Y))*prop_y))
       }
       else{    
-        y <- seq(min(unique(Y)),max(unique(Y)),length.out=length(unique(Y))*prop_y)
+        y <- seq(min(unique(Y)),max(unique(Y[-which.max(Y)])),length.out=length(unique(Y))*prop_y)
       }
     }
     else{
@@ -35,7 +35,7 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, prop_y = 0.5, log = FALS
   }
   else{
     if (keep_zeros){
-      y <- sort(unique(Y))
+      y <- sort(unique(Y[-which.max(Y)]))
     }
     else{
       y <- sort(unique(Y[-which(Y==0)]))
