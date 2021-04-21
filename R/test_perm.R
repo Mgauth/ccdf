@@ -19,7 +19,7 @@
 #'
 #' @export
 
-test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, number_y = 0.5, log = FALSE, keep_zeros = TRUE){
+test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, number_y = 5, log = FALSE, keep_zeros = TRUE){
 
   if(parallel){
     if(is.null(n_cpus)){

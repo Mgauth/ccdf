@@ -290,7 +290,7 @@ ccdf_testing <- function(exprmat = NULL,
       perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
       index <- which(((res+1)/(perm+1))<thresholds[1])
-      k <- 1
+      k <- 2
       
       while (length(index)!=0 & k<=length(n_perm_adaptive)){
 
