@@ -18,18 +18,18 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   if (space_y){
     if (keep_zeros){
       if (log){
-        y <- exp(seq(log(min(Y)),log(max(Y[-which.max(Y)])),length.out=number_y))
+        y <- exp(seq(log(min(Y[-which(Y==0)])),log(max(Y[-which.max(Y)])),length.out=number_y))
       }
       else{    
-        y <- seq(min(unique(Y)),max(unique(Y[-which.max(Y)])),length.out=number_y)
+        y <- seq(min(Y),max(Y[-which.max(Y)]),length.out=number_y)
       }
     }
     else{
       if (log){
-        y <- exp(seq(log(min(Y[-which(Y==0)])),log(max(Y[-which(Y==0)])),length.out=number_y))
+        y <- exp(seq(log(min(Y[-which(Y==0)])),log(max(Y[-which.max(Y)])),length.out=number_y))
       }
       else{    
-        y <- seq(min(unique(Y[-which(Y==0)])),max(unique(Y[-which(Y==0)])),length.out=number_y)
+        y <- seq(min(Y[-which(Y==0)]),max(max(Y[-which.max(Y)])),length.out=number_y)
       }
     }
   }
