@@ -289,13 +289,13 @@ ccdf_testing <- function(exprmat = NULL,
         keep_zeros = keep_zeros)$score},cl=n_cpus)
       perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
-      index <- which(((res+1)/(perm+1))<thresholds[1])
       k <- 2
       
       while (length(index)!=0 & k<=length(n_perm_adaptive)){
 
         print(paste("Computing", sum(n_perm_adaptive[1:k]), "permutations..."))
           
+        index <- which(((res+1)/(perm+1))<thresholds[k-1])
         res_perm <- pbapply::pbsapply(1:nrow(exprmat[index,]), FUN=function(i){test_perm(
             Y = exprmat[index,][i,],
             X = variable2test,
@@ -309,7 +309,6 @@ ccdf_testing <- function(exprmat = NULL,
             keep_zeros = keep_zeros)$score},cl=n_cpus)
           res[index] <- res[index] + res_perm
           perm[index] <- perm[index] + rep(n_perm_adaptive[k],nrow(exprmat[index,]))
-          index <- which(((res+1)/(perm+1))<thresholds[k])
           k <- k+1
         }
       
