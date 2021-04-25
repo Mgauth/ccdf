@@ -19,8 +19,9 @@ ccdf_testing(
   fast = TRUE,
   adaptive = FALSE,
   space_y = FALSE,
-  prop_y = 0.5,
-  log = FALSE
+  number_y = ncol(exprmat),
+  log = FALSE,
+  keep_zeros = TRUE
 )
 }
 \arguments{
@@ -75,13 +76,16 @@ should be performed. Default is \code{FALSE}.}
 When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 the maximum of the observations is used. Default is \code{FALSE}.}
 
-\item{prop_y}{a number between 0.01 and 1 indicating the proportion of y thresholds (and therefore
+\item{number_y}{a number between 0.01 and 1 indicating the proportion of y thresholds (and therefore
 the number of regressions) to perform the test. Default is \code{0.5}.}
 
 \item{log}{a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
 When \code{log} is \code{TRUE}, a regular sequence between the minimum and
 the maximum in the logarithmic scale of the observations is used. If the observations
 are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.}
+
+\item{keep_zeros}{a logical flag indicating whether to include a threshold for the dropouts (i.e zero values).
+When \code{keep_zeros} is \code{TRUE}, a difference in zeros can be found. Default is \code{TRUE}.}
 }
 \value{
 A list with the following elements:\itemize{

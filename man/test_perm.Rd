@@ -12,8 +12,9 @@ test_perm(
   parallel = FALSE,
   n_cpus = NULL,
   space_y = FALSE,
-  prop_y = length(unique(Y)),
-  log = FALSE
+  number_y = 5,
+  log = FALSE,
+  keep_zeros = TRUE
 )
 }
 \arguments{
@@ -21,7 +22,7 @@ test_perm(
 When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 the maximum of the observations is used. Default is \code{FALSE}.}
 
-\item{prop_y}{a integer indicating the number of y thresholds (and therefore
+\item{number_y}{a integer indicating the number of y thresholds (and therefore
 the number of regressions) to perform the test. Default is \code{NULL}.}
 }
 \description{
