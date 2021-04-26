@@ -85,14 +85,6 @@
 #' }
 #'
 #'@export
-#' 
-#'@examples
-#' X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
-#' Y <- replicate(1000, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,2,1)))
-#' Y <- t(Y)
-#' Z <- rnorm(n = 100)
-#' res <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), covariates=data.frame(Z=Z), test="asymptotic") # asymptotic test
-#' res2 <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="permutations", adaptive=FALSE) # adaptive permutation test
 
 
 ccdf_testing <- function(exprmat = NULL,
