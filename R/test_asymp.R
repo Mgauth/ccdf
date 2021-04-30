@@ -17,10 +17,10 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   
   if (space_y){
     if (log){
-      y <- exp(seq(log(min(Y)),log(max(Y)),length.out=number_y))
+      y <- exp(seq(ifelse(length(which(Y==0))==0,min(Y),min(Y[-which(Y==0)])),log(max(Y)),length.out=number_y))
     }
     else{    
-      y <- seq(min(unique(Y)),max(unique(Y)),length.out=number_y)
+      y <- seq(ifelse(length(which(Y==0))==0,min(Y),min(Y[-which(Y==0)])),max(Y),length.out=number_y)
     }
   }
   
