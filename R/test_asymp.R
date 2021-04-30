@@ -11,35 +11,21 @@
 #'
 
 
-test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique(Y)), log = FALSE, keep_zeros = TRUE){
+test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique(Y)), log = FALSE){
   
   Y <- as.numeric(Y)
   
   if (space_y){
-    if (keep_zeros){
-      if (log){
-        y <- exp(seq(log(ifelse(length(which(Y==0))==0,min(Y),min(Y[-which(Y==0)]))),log(max(Y[-which.max(Y)])),length.out=number_y))
-      }
-      else{    
-        y <- seq(min(Y),max(Y[-which.max(Y)]),length.out=number_y)
-      }
+    if (log){
+      y <- exp(seq(log(min(Y)),log(max(Y)),length.out=number_y))
     }
-    else{
-      if (log){
-        y <- exp(seq(log(min(Y[-which(Y==0)])),log(max(Y[-which.max(Y)])),length.out=number_y))
-      }
-      else{    
-        y <- seq(min(Y[-which(Y==0)]),max(max(Y[-which.max(Y)])),length.out=number_y)
-      }
+    else{    
+      y <- seq(min(unique(Y)),max(unique(Y)),length.out=number_y)
     }
   }
+  
   else{
-    if (keep_zeros){
-      y <- sort(unique(Y[-which.max(Y)]))
-    }
-    else{
-      y <- sort(unique(Y[-which(Y==0)]))
-    }
+    y <- sort(unique(Y))
   }
   
   # no covariates Z

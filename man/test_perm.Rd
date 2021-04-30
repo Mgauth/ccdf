@@ -13,8 +13,7 @@ test_perm(
   n_cpus = NULL,
   space_y = FALSE,
   number_y = 5,
-  log = FALSE,
-  keep_zeros = TRUE
+  log = FALSE
 )
 }
 \arguments{

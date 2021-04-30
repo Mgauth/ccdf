@@ -10,8 +10,7 @@ test_asymp(
   Z = NULL,
   space_y = FALSE,
   number_y = length(unique(Y)),
-  log = FALSE,
-  keep_zeros = TRUE
+  log = FALSE
 )
 }
 \arguments{

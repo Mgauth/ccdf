@@ -61,8 +61,6 @@
 #'the maximum in the logarithmic scale of the observations is used. If the observations
 #'are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.
 #'
-#'@param keep_zeros a logical flag indicating whether to include a threshold for the dropouts (i.e zero values).
-#'When \code{keep_zeros} is \code{TRUE}, a difference in zeros can be found. Default is \code{TRUE}.
 #'
 #'
 #'@import foreach
@@ -102,8 +100,7 @@ ccdf_testing <- function(exprmat = NULL,
                          adaptive = FALSE,
                          space_y = FALSE,
                          number_y = ncol(exprmat),
-                         log = FALSE,
-                         keep_zeros = TRUE){
+                         log = FALSE){
   
   # check
   stopifnot(is.data.frame(exprmat))
@@ -277,8 +274,7 @@ ccdf_testing <- function(exprmat = NULL,
         n_cpus = 1,
         space_y = space_y, 
         number_y = number_y,
-        log = log,
-        keep_zeros = keep_zeros)$score},cl=n_cpus)
+        log = log)$score},cl=n_cpus)
       perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
       k <- 2
@@ -297,8 +293,7 @@ ccdf_testing <- function(exprmat = NULL,
             n_cpus = 1,
             space_y = space_y, 
             number_y = number_y,
-            log = log,
-            keep_zeros = keep_zeros)$score},cl=n_cpus)
+            log = log)$score},cl=n_cpus)
           res[index] <- res[index] + res_perm
           perm[index] <- perm[index] + rep(n_perm_adaptive[k],nrow(exprmat[index,]))
           k <- k+1
@@ -320,8 +315,7 @@ ccdf_testing <- function(exprmat = NULL,
                   n_cpus = 1,
                   space_y = space_y, 
                   number_y = number_y,
-                  log = log,
-                  keep_zeros = keep_zeros)},cl=n_cpus))
+                  log = log)},cl=n_cpus))
       
       #res <- as.vector(unlist(res))
       
@@ -340,8 +334,7 @@ ccdf_testing <- function(exprmat = NULL,
     res <- do.call("rbind",pbapply::pblapply(1:nrow(Y), function(i){test_asymp(Y[i,], X, Z, 
                                                                                space_y = space_y, 
                                                                                number_y = number_y,
-                                                                               log = log,
-                                                                               keep_zeros = keep_zeros)}, cl=n_cpus))
+                                                                               log = log)}, cl=n_cpus))
     df <- data.frame(raw_pval = res$raw_pval, adj_pval = p.adjust(res$raw_pval, method = "BH"), test_statistic = res$Stat)
   }
   
