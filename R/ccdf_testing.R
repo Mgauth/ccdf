@@ -1,16 +1,16 @@
 #' Complex hypothesis testing using (un)conditional independence test
 #'
-#'@param exprmat a numeric matrix or data frame of size \code{G x n} containing the
+#'@param exprmat a data frame of size \code{G x n} containing the
 #'preprocessed expressions from \code{n} samples (or cells) for \code{G}
 #'genes. Default is \code{NULL}.
 #'
-#'@param covariate 
-#'\code{covariate} must be a numeric or factor vector of size \code{n}
-#'containing the model covariate for \code{n} samples.
-#'
 #'@param variable2test
-#'\code{variable2test} must be a numeric or factor vector of size \code{n}
-#' containing the variable to be tested (the condition).
+#'a data frame of numeric or factor vector(s) of size \code{n}
+#'containing the variable(s) to be tested (the condition(s))
+#' 
+#'@param covariate 
+#'a data frame of numeric or factor vector(s) of size \code{n}
+#'containing the covariate(s)
 #'
 #'@param test a character string indicating which method to use to
 #'compute the test, either \code{'asymptotic'}, \code{'permutations'} or 
@@ -81,8 +81,19 @@
 #'   the raw p-values, the second one '\code{adj_pval}' contains the FDR adjusted p-values
 #'   using Benjamini-Hochberg correction.
 #' }
+#' 
+#'@references Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2019).
+#'Distribution-free complex hypothesis testing for single-cell RNA-seq differential expression analysis, *bioRxiv* 445165.
+#'[DOI: 10.1101/2021.05.21.445165](https://doi.org/10.1101/2021.05.21.445165).
 #'
 #'@export
+#'
+#'@examples
+#'X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
+#'Y <- replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1)))
+#'Y <- t(Y)
+#'res_asymp <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="asymptotic") # asymptotic test
+#'res_perm <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="permutations", adaptive=TRUE) # adaptive permutation test
 
 
 ccdf_testing <- function(exprmat = NULL,
