@@ -1,13 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
-```
-
 # `ccdf`
 
 [![Downloads](https://cranlogs.r-pkg.org/badges/ccdf?color=blue)](https://www.r-pkg.org/pkg/ccdf)
