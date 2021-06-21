@@ -24,15 +24,15 @@ ccdf_testing(
 )
 }
 \arguments{
-\item{exprmat}{a numeric matrix or data frame of size \code{G x n} containing the
+\item{exprmat}{a data frame of size \code{G x n} containing the
 preprocessed expressions from \code{n} samples (or cells) for \code{G}
 genes. Default is \code{NULL}.}
 
-\item{variable2test}{\code{variable2test} must be a numeric or factor vector of size \code{n}
-containing the variable to be tested (the condition).}
+\item{variable2test}{a data frame of numeric or factor vector(s) of size \code{n}
+containing the variable(s) to be tested (the condition(s))}
 
-\item{covariate}{\code{covariate} must be a numeric or factor vector of size \code{n}
-containing the model covariate for \code{n} samples.}
+\item{covariate}{a data frame of numeric or factor vector(s) of size \code{n}
+containing the covariate(s)}
 
 \item{distance}{a character string indicating which distance to use to
 compute the test, either \code{'L2'}, \code{'L1'} or 
@@ -99,4 +99,16 @@ A list with the following elements:\itemize{
 }
 \description{
 Complex hypothesis testing using (un)conditional independence test
+}
+\examples{
+X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
+Y <- replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1)))
+Y <- t(Y)
+res_asymp <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="asymptotic") # asymptotic test
+res_perm <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="permutations", adaptive=TRUE) # adaptive permutation test
+}
+\references{
+Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2019).
+Distribution-free complex hypothesis testing for single-cell RNA-seq differential expression analysis, *bioRxiv* 445165.
+[DOI: 10.1101/2021.05.21.445165](https://doi.org/10.1101/2021.05.21.445165).
 }
