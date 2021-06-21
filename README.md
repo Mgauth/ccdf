@@ -29,14 +29,14 @@ devtools::install_github("Mgauth/ccdf")
 
 Here is a basic example which shows how to use `ccdf` with simple generated data.
 
-```{r example, eval = FALSE}
+``` r
 ## Data Generation
 X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
 Y <- replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1)))
 Y <- t(Y)
 ```
 
-```{r estimation, eval = FALSE}
+``` r
 # Hypothesis testing
 res_asymp <- ccdf_testing(exprmat=Y, variable2test=X, test="asymptotic") # asymptotic test
 res_perm <- ccdf_testing(exprmat=Y, variable2test=X, test="permutations",
