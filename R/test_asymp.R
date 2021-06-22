@@ -50,7 +50,7 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   Phi <- (1/length(Y))*(t(as.matrix(modelmat))%*%as.matrix(modelmat))
   H <- (solve(Phi)%*%t(as.matrix(modelmat))) # ginv
   H <- H[ind_X,]
-  
+
   for (i in 1:(length(y)-1)){ # on fait varier le seuil
     indi_Y <- 1*(Y<=y[i])
     indi_pi[,i] <- indi_Y
@@ -61,7 +61,7 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   
   beta <- as.vector(beta)
   prop <- colMeans(indi_pi)
-
+  
   if (is.null(dim(H))){
     H_square <- sum(H^2)
     Sigma <- sapply(1:(length(y)-1), function(i){sapply(1:((length(y)-1)*length(ind_X)), function(j){
@@ -141,8 +141,7 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   
   # param <- list(lim=15000,acc= 5e-04)
   # pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
-  
-  pval <- pchisqsum(STAT, lower.tail = FALSE, df = rep(1,length(STAT)), a = diag(A), method = "saddlepoint")
+  pval <- pchisqsum(STAT, lower.tail = FALSE, df = rep(1,length(diag(A))), a = diag(A), method = "saddlepoint")
   
   # times <- 2
   # while ((pval>1)&(times<11)){

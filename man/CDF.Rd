@@ -4,7 +4,7 @@
 \alias{CDF}
 \title{CDF function}
 \usage{
-CDF(Y, X, Z = NULL, method = "logistic regression", fast = FALSE)
+CDF(Y, X, Z = NULL, method = "linear regression", fast = TRUE)
 }
 \arguments{
 \item{X}{}

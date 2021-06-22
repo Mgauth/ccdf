@@ -11,7 +11,7 @@
 #' 
 
 
-CDF <- function(Y,X,Z=NULL,method="logistic regression", fast=FALSE){
+CDF <- function(Y,X,Z=NULL,method="linear regression", fast=TRUE){
 
   if (class(Z)=="NULL"){
     n_Y <- length(Y)
