@@ -12,5 +12,5 @@ License: GP-L
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
-Depends: CompQuadForm, RcppNumerical, doParallel, foreach, ggplot2, randomForest, rpart,statmod, viridisLite,
+Depends: CompQuadForm, RcppNumerical, doParallel, foreach, ggplot2, randomForest, rpart,statmod, viridisLite, survey,
     R (>= 3.6)

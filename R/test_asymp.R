@@ -139,24 +139,24 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   z <- (sqrt(length(Y)))*beta
   STAT <- sum(t(z)*z)
   
-  param <- list(lim=15000,acc= 5e-04)
+  # param <- list(lim=15000,acc= 5e-04)
+  # pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
   
-  pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
+  pval <- pchisqsum(STAT, lower.tail = FALSE, df = rep(1,length(STAT)), a = diag(A), method = "saddlepoint")
   
-  
-  times <- 2
-  while ((pval>1)&(times<11)){
-    pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = times*param$lim, acc = param$acc)$Qq
-    times <- times*2
-  }
-  
-  if (pval>1){pval<-1}
-  
-  times <- 0.1
-  while ((pval>1)&(times<5e-08)){
-    pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = times*param$acc)$Qq
-    times <- 0.1*times
-  }
+  # times <- 2
+  # while ((pval>1)&(times<11)){
+  #   pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = times*param$lim, acc = param$acc)$Qq
+  #   times <- times*2
+  # }
+  # 
+  # if (pval>1){pval<-1}
+  # 
+  # times <- 0.1
+  # while ((pval>1)&(times<5e-08)){
+  #   pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = times*param$acc)$Qq
+  #   times <- 0.1*times
+  # }
   
   return(data.frame(raw_pval=pval,Stat=STAT))
   
