@@ -55,7 +55,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression", fast=TRUE, space_y=
       ggplot() + ggtitle(colnames(Y)) +
         geom_step(data = df_plot,aes(x = y, y = cdf, color = viridis(n=(l_X+1))[1]), size = 1) +
         geom_step(data = df_plot, aes(x = y, y = ccdf, color = as.factor(x)), size = 1) +
-        scale_color_manual(name = "", labels = c("CDF", paste0("CCDF X=", unique(x)), "CCDF2"),
+        scale_color_manual(name = "", labels = c("CDF", paste0("CCDF X=", unique(df_plot$x)), "CCDF2"),
                            values = c(viridis(n=(l_X+1))[1],viridis(n=(l_X+1))[-1])) + xlab("y") +
         ylab("value") + theme_bw() + theme(plot.title = element_text(hjust = 0.5))
     }
@@ -81,7 +81,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression", fast=TRUE, space_y=
         geom_point(data = df_plot, aes(x = y, y = ccdf_x, color = as.factor(x)), shape=16, size = 2) +
         geom_point(data = df_plot, aes(x = y, y = ccdf_nox, color="black"), shape=2, size = 2) +
         scale_color_manual(name = "", 
-                           labels = c("CDF", paste0("CCDF_X X=", unique(x)), "CCDF_noX"),
+                           labels = c("CDF", paste0("CCDF_X X=", unique(df_plot$x)), "CCDF_noX"),
                            values = c(viridis(n=(l_X+2))[-(l_X+2)],"gold"),
                            guide = guide_legend(override.aes = list(linetype = c(1,0,0,0),
                                                                     shape = c(NA,16,16,2)))) +
