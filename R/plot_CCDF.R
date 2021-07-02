@@ -51,6 +51,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression", fast=TRUE, space_y=
     df_plot <- data.frame("y" = res$y, "x" = res$x, "cdf" = res$cdf, "ccdf" = res$ccdf)
     
     if (is.factor(X[,1])){
+      l_X <- length(unique(X[,1]))
       ggplot() + ggtitle(colnames(Y)) +
         geom_step(data = df_plot,aes(x = y, y = cdf, color = viridis(n=(l_X+1))[1]), size = 1) +
         geom_step(data = df_plot, aes(x = y, y = ccdf, color = as.factor(x)), size = 1) +
@@ -74,6 +75,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression", fast=TRUE, space_y=
     df_plot <- data.frame("y" = res$y, "x" = res$x, "z" = res$z, "cdf" = res$cdf, "ccdf_nox" = res$ccdf_nox,  "ccdf_x" = res$ccdf_x)
     
     if (is.factor(X[,1])){
+      l_X <- length(unique(X[,1]))
       ggplot() + ggtitle(colnames(Y)) +
         geom_step(data = df_plot, aes(x = y, y = cdf, color = viridis(n=(l_X+2))[1]), size = 1) +
         geom_point(data = df_plot, aes(x = y, y = ccdf_x, color = as.factor(x)), shape=16, size = 2) +
