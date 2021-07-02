@@ -20,7 +20,7 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
       y <- exp(seq(ifelse(length(which(Y==0))==0,min(Y),min(Y[-which(Y==0)])),log(max(Y)),length.out=number_y))
     }
     else{    
-      y <- seq(ifelse(length(which(Y==0))==0,min(Y),min(Y[-which(Y==0)])),max(Y),length.out=number_y)
+      y <- seq(ifelse(length(which(Y==0))==0,min(Y),min(Y[-which(Y==0)])),max(Y[-which.max(Y)]),length.out=number_y)
     }
   }
   
