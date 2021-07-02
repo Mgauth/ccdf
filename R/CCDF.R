@@ -14,7 +14,7 @@
 CCDF <- function(Y,X,Z=NULL,method="linear regression", fast=TRUE, space_y=FALSE, number_y=length(Y)){
   
   if (space_y){
-   y <- seq(min(Y[-which.min(Y)]),max(Y),length.out=number_y)
+   y <- seq(min(Y[-which(Y==min(Y))]),max(Y),length.out=number_y)
   }
   else{
     y <- sort(unique(Y))
