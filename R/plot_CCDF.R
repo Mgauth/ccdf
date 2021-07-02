@@ -18,7 +18,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression", fast=TRUE, space_y=
   stopifnot(is.data.frame(Z) | is.null(Z))
   stopifnot(is.logical(fast))
   
-  genes_names <- colnames(exprmat)
+  genes_names <- colnames(Y)
   
   if (sum(is.na(Y)) > 1) {
     warning("'y' contains", sum(is.na(y)), "NA values. ",
