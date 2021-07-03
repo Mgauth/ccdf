@@ -93,7 +93,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
           geom_point(data = df_plot, aes(x = y, y = ccdf_x, color = as.factor(x), shape = shape1), size = 2) +
           geom_point(data = df_plot, aes(x = y, y = ccdf_nox, color = as.factor(x), shape = shape2), size = 2) +
           scale_color_manual(name = "", labels = c("CDF", levels(df_plot$x)[ordered(levels(df_plot$x))]),
-                             values = c(viridis(n=(l_X+1))[-(l_X+2)],"gold"),
+                             values = c(viridis(n=(l_X+1))),
                              guide = guide_legend(override.aes = list(linetype = c("solid",rep("blank",l_X)),
                                                                       shape = c(NA,rep(16,l_X))))) +
           scale_shape_manual(name="CCDF type", labels = c("CCDF_X", "CCDF_noX"),
@@ -111,7 +111,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
           geom_point(data = df_plot, aes(x = y, y = ccdf_nox, color='gold'), shape=2, size = 1) +
           scale_color_manual(name = "", 
                              labels = c("CDF", "CCDF_X", "CCDF_noX"),
-                             values = c(viridis(n=3)[1:2],"gold"),
+                             values = c(viridis(n=3)),
                              guide = guide_legend(override.aes = list(linetype = c("solid","blank","blank"),
                                                                       shape = c(NA,16,2)))) +
           xlab("y") +
@@ -129,7 +129,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
           geom_point(data = df_plot, aes(x = y, y = ccdf_x, color = as.factor(z), shape = shape1), size = 1) +
           geom_point(data = df_plot, aes(x = y, y = ccdf_nox, color = as.factor(z), shape = shape2), size = 1) +
           scale_color_manual(name = "", labels = c("CDF", levels(df_plot$z)[ordered(levels(df_plot$z))]),
-                             values = c(viridis(n=(l_Z+1))[-(l_X+2)],"gold"),
+                             values = c(viridis(n=(l_Z+1))),
                              guide = guide_legend(override.aes = list(linetype = c("solid",rep("blank",l_Z)),
                                                                       shape = c(NA,rep(16,l_Z))))) +
           scale_shape_manual(name="CCDF type", labels = c("CCDF_X", "CCDF_noX"),
@@ -147,7 +147,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
           geom_point(data = df_plot, aes(x = y, y = ccdf_nox, color='gold'), shape=2, size = 1) +
           scale_color_manual(name = "", 
                              labels = c("CDF", "CCDF_X", "CCDF_noX"),
-                             values = c(viridis(n=3)[1:2],"gold"),
+                             values = c(viridis(n=3)),
                              guide = guide_legend(override.aes = list(linetype = c("solid","blank","blank"),
                                                                       shape = c(NA,16,2)))) +
           xlab("y") +
