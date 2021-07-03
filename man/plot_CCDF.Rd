@@ -11,7 +11,8 @@ plot_CCDF(
   method = "linear regression",
   fast = TRUE,
   space_y = FALSE,
-  number_y = length(Y)
+  number_y = length(Y),
+  plot_X = TRUE
 )
 }
 \arguments{

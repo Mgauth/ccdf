@@ -94,6 +94,9 @@ CCDF <- function(Y,X,Z=NULL,method="linear regression", fast=TRUE, space_y=FALSE
       }
     }
     
+    if (is.factor(X[,1])){
+      x_sort <- as.factor(x_sort)
+    }
     ccdf <- unlist(ccdf, use.names = FALSE)
     cdf <- unlist(cdf, use.names = FALSE)
     return(list(cdf=cdf, ccdf=ccdf, y=y_sort, x=x_sort))
@@ -185,6 +188,12 @@ CCDF <- function(Y,X,Z=NULL,method="linear regression", fast=TRUE, space_y=FALSE
       }
     }
     
+    if (is.factor(X[,1])){
+      x_sort <- as.factor(x_sort)
+    }
+    if (is.factor(Z[,1])){
+      z_sort <- as.factor(z_sort)
+    }
     ccdf_x <- unlist(ccdf_x, use.names = FALSE)
     ccdf_nox <- unlist(ccdf_nox, use.names = FALSE)
     cdf <- unlist(cdf, use.names = FALSE)
