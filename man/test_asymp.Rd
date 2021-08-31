@@ -14,7 +14,26 @@ test_asymp(
 )
 }
 \arguments{
-\item{X}{}
+\item{Y}{a numeric vector of size \code{n} containing the
+preprocessed expressions from \code{n} samples (or cells).}
+
+\item{X}{a numeric or factor vector of size \code{n}
+containing the variable to be tested (the condition to be tested).}
+
+\item{Z}{a numeric or factor vector of size \code{n}
+containing the covariate. Multiple variables are not allowed.}
+
+\item{space_y}{a logical flag indicating whether the y thresholds are spaced. 
+When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
+the maximum of the observations is used. Default is \code{FALSE}.}
+
+\item{number_y}{an integer value indicating the number of y thresholds (and therefore
+the number of regressions) to perform the test. Default is \code{ncol(exprmat)}.}
+
+\item{log}{a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
+When \code{log} is \code{TRUE}, a regular sequence between the minimum and
+the maximum in the logarithmic scale of the observations is used. If the observations
+are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.}
 }
 \description{
 Asymptotic test

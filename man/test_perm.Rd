@@ -2,7 +2,7 @@
 % Please edit documentation in R/test_perm.R
 \name{test_perm}
 \alias{test_perm}
-\title{Permutation test using the test statistic}
+\title{Permutation test}
 \usage{
 test_perm(
   Y,
@@ -17,13 +17,36 @@ test_perm(
 )
 }
 \arguments{
+\item{Y}{a numeric vector of size \code{n} containing the
+preprocessed expressions from \code{n} samples (or cells).}
+
+\item{X}{a numeric or factor vector of size \code{n}
+containing the variable to be tested (the condition to be tested).}
+
+\item{Z}{a numeric or factor vector of size \code{n}
+containing the covariate. Multiple variables are not allowed.}
+
+\item{n_perm}{the number of permutations. Default is \code{100}.}
+
+\item{parallel}{a logical flag indicating whether parallel computation
+should be enabled. Default is \code{TRUE}.}
+
+\item{n_cpus}{an integer indicating the number of cores to be used when
+\code{parallel} is \code{TRUE}.
+Default is \code{parallel::detectCores() - 1}.}
+
 \item{space_y}{a logical flag indicating whether the y thresholds are spaced. 
 When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 the maximum of the observations is used. Default is \code{FALSE}.}
 
-\item{number_y}{a integer indicating the number of y thresholds (and therefore
-the number of regressions) to perform the test. Default is \code{NULL}.}
+\item{number_y}{an integer value indicating the number of y thresholds (and therefore
+the number of regressions) to perform the test. Default is \code{ncol(exprmat)}.}
+
+\item{log}{a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
+When \code{log} is \code{TRUE}, a regular sequence between the minimum and
+the maximum in the logarithmic scale of the observations is used. If the observations
+are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.}
 }
 \description{
-Permutation test using the test statistic
+Permutation test
 }

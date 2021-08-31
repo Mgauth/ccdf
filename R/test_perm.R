@@ -1,17 +1,34 @@
-#' Permutation test using the test statistic
+#' Permutation test
 #'
-#' @param Y
-#' @param X
-#' @param Z
-#' @param n_perm
-#' @param parallel
-#' @param n_cpus
-#' @param space_y a logical flag indicating whether the y thresholds are spaced. 
+#'@param Y a numeric vector of size \code{n} containing the
+#'preprocessed expressions from \code{n} samples (or cells).
+#'
+#'@param X a numeric or factor vector of size \code{n}
+#'containing the variable to be tested (the condition to be tested). 
+#' 
+#'@param Z a numeric or factor vector of size \code{n}
+#'containing the covariate. Multiple variables are not allowed.
+#'
+#'@param n_perm the number of permutations. Default is \code{100}.
+#'
+#'@param parallel a logical flag indicating whether parallel computation
+#'should be enabled. Default is \code{TRUE}.
+#'
+#'@param n_cpus an integer indicating the number of cores to be used when
+#'\code{parallel} is \code{TRUE}.
+#'Default is \code{parallel::detectCores() - 1}.
+#'
+#'@param space_y a logical flag indicating whether the y thresholds are spaced. 
 #'When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 #'the maximum of the observations is used. Default is \code{FALSE}.
 #'
-#' @param number_y a integer indicating the number of y thresholds (and therefore
-#' the number of regressions) to perform the test. Default is \code{NULL}.
+#'@param number_y an integer value indicating the number of y thresholds (and therefore
+#'the number of regressions) to perform the test. Default is \code{ncol(exprmat)}.
+#' 
+#'@param log a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
+#'When \code{log} is \code{TRUE}, a regular sequence between the minimum and
+#'the maximum in the logarithmic scale of the observations is used. If the observations
+#'are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.
 #'
 #' @import doParallel
 #' @import parallel

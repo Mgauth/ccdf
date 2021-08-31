@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_CCDF.R
 \name{plot_CCDF}
 \alias{plot_CCDF}
-\title{CDF function}
+\title{Function to plot the CCDF according to the type of X et Z}
 \usage{
 plot_CCDF(
   Y,
@@ -12,12 +12,43 @@ plot_CCDF(
   fast = TRUE,
   space_y = FALSE,
   number_y = length(Y),
-  plot_X = TRUE
+  plot_X = TRUE,
+  plot_Z = FALSE
 )
 }
 \arguments{
-\item{X}{}
+\item{Y}{a numeric vector of size \code{n} containing the
+preprocessed expressions from \code{n} samples (or cells).}
+
+\item{X}{a numeric or factor vector of size \code{n}
+containing the variable to be tested (the condition to be tested).}
+
+\item{Z}{a numeric or factor vector of size \code{n}
+containing the covariate. Multiple variables are not allowed.}
+
+\item{method}{a character string indicating which method to use to
+compute the CCDF, either \code{'linear regression'}, \code{'logistic regression'}
+and  \code{'permutations'} or \code{'RF'} for Random Forests.
+Default is \code{'linear regression'} since it is the method used in the test.}
+
+\item{fast}{a logical flag indicating whether the fast implementation of
+logistic regression should be used. Only if \code{'dist_permutations'} is specified.
+Default is \code{TRUE}.}
+
+\item{space_y}{a logical flag indicating whether the y thresholds are spaced. 
+When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
+the maximum of the observations is used. Default is \code{FALSE}.}
+
+\item{number_y}{an integer value indicating the number of y thresholds (and therefore
+the number of regressions) to perform the test. Default is \code{length(Y)}.}
+
+\item{plot_X}{a logical flag indicating whether the y thresholds are spaced in logarithmic scale.}
+
+\item{log}{a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
+When \code{log} is \code{TRUE}, a regular sequence between the minimum and
+the maximum in the logarithmic scale of the observations is used. If the observations
+are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.}
 }
 \description{
-CDF function
+Function to plot the CCDF according to the type of X et Z
 }

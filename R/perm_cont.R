@@ -1,7 +1,15 @@
-#' permutation Z continuous
+#' permutation procedure when Z is continuous
 #'
-#' @param X
+#' Permutation test using the test statistic
 #'
+#'@param Y a numeric vector of size \code{n} containing the
+#'preprocessed expressions from \code{n} samples (or cells).
+#'
+#'@param X a numeric or factor vector of size \code{n}
+#'containing the variable to be tested (the condition to be tested). 
+#' 
+#'@param Z a numeric or vector of size \code{n}
+#'containing the covariate. Multiple variables are not allowed.
 #'
 #' @export
 

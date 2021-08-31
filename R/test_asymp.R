@@ -1,10 +1,27 @@
 #' Asymptotic test
 #'
-#' @param Y
-#' @param X
+#'@param Y a numeric vector of size \code{n} containing the
+#'preprocessed expressions from \code{n} samples (or cells).
 #'
-#' @import RcppNumerical
-#' @import CompQuadForm
+#'@param X a numeric or factor vector of size \code{n}
+#'containing the variable to be tested (the condition to be tested). 
+#' 
+#'@param Z a numeric or factor vector of size \code{n}
+#'containing the covariate. Multiple variables are not allowed.
+#'
+#'@param space_y a logical flag indicating whether the y thresholds are spaced. 
+#'When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
+#'the maximum of the observations is used. Default is \code{FALSE}.
+#'
+#'@param number_y an integer value indicating the number of y thresholds (and therefore
+#'the number of regressions) to perform the test. Default is \code{ncol(exprmat)}.
+#' 
+#'@param log a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
+#'When \code{log} is \code{TRUE}, a regular sequence between the minimum and
+#'the maximum in the logarithmic scale of the observations is used. If the observations
+#'are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.
+#'
+#' @import survey
 #'
 #' @export
 #' 

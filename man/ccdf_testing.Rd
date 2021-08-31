@@ -2,21 +2,21 @@
 % Please edit documentation in R/ccdf_testing.R
 \name{ccdf_testing}
 \alias{ccdf_testing}
-\title{Complex hypothesis testing using (un)conditional independence test}
+\title{Main function to perform complex hypothesis testing using (un)conditional independence test}
 \usage{
 ccdf_testing(
   exprmat = NULL,
   variable2test = NULL,
   covariate = NULL,
-  method = c("linear regression", "logistic regression"),
   distance = c("L2", "L1", "L_sup"),
   test = c("asymptotic", "permutations", "dist_permutations"),
+  method = c("linear regression", "logistic regression", "RF"),
+  fast = TRUE,
   n_perm = 100,
   n_perm_adaptive = c(100, 150, 250, 500),
   thresholds = c(0.1, 0.05, 0.01),
   parallel = TRUE,
   n_cpus = NULL,
-  fast = TRUE,
   adaptive = FALSE,
   space_y = FALSE,
   number_y = ncol(exprmat),
@@ -41,8 +41,18 @@ Default is \code{'L2'}.}
 
 \item{test}{a character string indicating which method to use to
 compute the test, either \code{'asymptotic'}, \code{'permutations'} or 
-\code{'dist_permutations'}.
+\code{'dist_permutations'}. \code{'dist_permutations'} allows to compute
+the distance between the CDF and the CCDF or two CCDFs.
 Default is \code{'asymptotic'}.}
+
+\item{method}{a character string indicating which method to use to
+compute the CCDF, either \code{'linear regression'}, \code{'logistic regression'}
+and  \code{'permutations'} or \code{'RF'} for Random Forests.
+Default is \code{'linear regression'} since it is the method used in the test.}
+
+\item{fast}{a logical flag indicating whether the fast implementation of
+logistic regression should be used. Only if \code{'dist_permutations'} is specified.
+Default is \code{TRUE}.}
 
 \item{n_perm}{the number of permutations. Default is \code{100}.}
 
@@ -63,11 +73,6 @@ should be enabled. Default is \code{TRUE}.}
 \code{parallel} is \code{TRUE}.
 Default is \code{parallel::detectCores() - 1}.}
 
-\item{fast}{a logical flag indicating whether the fast version of
-the logistic regression should be performed when \code{method} 
-is \code{'dist_permutations'}
-Default is \code{TRUE}.}
-
 \item{adaptive}{a logical flag indicating whether adaptive permutations
 should be performed. Default is \code{FALSE}.}
 
@@ -75,8 +80,8 @@ should be performed. Default is \code{FALSE}.}
 When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 the maximum of the observations is used. Default is \code{FALSE}.}
 
-\item{number_y}{a number between 0.01 and 1 indicating the proportion of y thresholds (and therefore
-the number of regressions) to perform the test. Default is \code{0.5}.}
+\item{number_y}{an integer value indicating the number of y thresholds (and therefore
+the number of regressions) to perform the test. Default is \code{ncol(exprmat)}.}
 
 \item{log}{a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
 When \code{log} is \code{TRUE}, a regular sequence between the minimum and
@@ -98,7 +103,7 @@ A list with the following elements:\itemize{
 }
 }
 \description{
-Complex hypothesis testing using (un)conditional independence test
+Main function to perform complex hypothesis testing using (un)conditional independence test
 }
 \examples{
 X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))

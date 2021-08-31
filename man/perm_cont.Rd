@@ -2,13 +2,20 @@
 % Please edit documentation in R/perm_cont.R
 \name{perm_cont}
 \alias{perm_cont}
-\title{permutation Z continuous}
+\title{permutation procedure when Z is continuous}
 \usage{
 perm_cont(Y, X, Z)
 }
 \arguments{
-\item{X}{}
+\item{Y}{a numeric vector of size \code{n} containing the
+preprocessed expressions from \code{n} samples (or cells).}
+
+\item{X}{a numeric or factor vector of size \code{n}
+containing the variable to be tested (the condition to be tested).}
+
+\item{Z}{a numeric or vector of size \code{n}
+containing the covariate. Multiple variables are not allowed.}
 }
 \description{
-permutation Z continuous
+Permutation test using the test statistic
 }
