@@ -5,7 +5,8 @@ Version: 1.0.2
 Author: Marine Gauthier, Boris Hejblum, Denis Agniel, Rodolphe Thiébaut
 Imports:
     pbapply,
-    parallel
+    parallel,
+    matrixStats
 Maintainer: The package maintainer <marine.gauthier@u-bordeaux.fr>
 Description: Complex Hypothesis Testing Through Conditional Cumulative Distribution Function Estimation (Distribution-Free Single-cell Differential Expression Analysis)
 License: GP-L
