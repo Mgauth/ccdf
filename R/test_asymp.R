@@ -14,33 +14,21 @@
 #'the maximum of the observations is used. Default is \code{FALSE}.
 #'
 #'@param number_y an integer value indicating the number of y thresholds (and therefore
-#'the number of regressions) to perform the test. Default is \code{ncol(exprmat)}.
-#' 
-#'@param log a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
-#'When \code{log} is \code{TRUE}, a regular sequence between the minimum and
-#'the maximum in the logarithmic scale of the observations is used. If the observations
-#'are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.
+#'the number of regressions) to perform the test. Default is \code{length(Y)}.
 #'
-#' @import survey
 #'
 #' @export
 #' 
 #'
 
 
-test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique(Y)), log = FALSE){
+test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique(Y))){
   
   Y <- as.numeric(Y)
   
   if (space_y){
-    if (log){
-      y <- exp(seq(ifelse(length(which(Y==0))==0,min(Y),min(Y[-which(Y==0)])),log(max(Y)),length.out=number_y))
-    }
-    else{    
-      y <- seq(ifelse(length(which(Y==0))==0,min(Y),min(Y[-which(Y==0)])),max(Y[-which.max(Y)]),length.out=number_y)
-    }
+    y <- seq(ifelse(length(which(Y==0))==0,min(Y),min(Y[-which(Y==0)])),max(Y[-which.max(Y)]),length.out=number_y)
   }
-  
   else{
     y <- sort(unique(Y))
   }

@@ -60,11 +60,6 @@
 #'
 #'@param number_y an integer value indicating the number of y thresholds (and therefore
 #'the number of regressions) to perform the test. Default is \code{ncol(exprmat)}.
-#' 
-#'@param log a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
-#'When \code{log} is \code{TRUE}, a regular sequence between the minimum and
-#'the maximum in the logarithmic scale of the observations is used. If the observations
-#'are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.
 #'
 #'
 #'
@@ -93,12 +88,6 @@
 #'
 #'@export
 #'
-#'@examples
-#'X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
-#'Y <- replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1)))
-#'Y <- t(Y)
-#'res_asymp <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="asymptotic") # asymptotic test
-#'res_perm <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="permutations", adaptive=TRUE) # adaptive permutation test
 
 
 ccdf_testing <- function(exprmat = NULL,
@@ -115,8 +104,7 @@ ccdf_testing <- function(exprmat = NULL,
                          n_cpus = NULL,
                          adaptive = FALSE,
                          space_y = FALSE,
-                         number_y = ncol(exprmat),
-                         log = FALSE){
+                         number_y = ncol(exprmat)){
   
   # check
   stopifnot(is.data.frame(exprmat))
@@ -289,8 +277,7 @@ ccdf_testing <- function(exprmat = NULL,
         parallel = FALSE,
         n_cpus = 1,
         space_y = space_y, 
-        number_y = number_y,
-        log = log)$score},cl=n_cpus)
+        number_y = number_y)$score},cl=n_cpus)
       perm <- rep(n_perm_adaptive[1],nrow(exprmat))
       
       k <- 2
@@ -310,8 +297,7 @@ ccdf_testing <- function(exprmat = NULL,
             parallel = FALSE,
             n_cpus = 1,
             space_y = space_y, 
-            number_y = number_y,
-            log = log)$score},cl=n_cpus)
+            number_y = number_y)$score},cl=n_cpus)
           res[index] <- res[index] + res_perm
           perm[index] <- perm[index] + rep(n_perm_adaptive[k],nrow(exprmat[index,]))
           k <- k+1
@@ -333,8 +319,7 @@ ccdf_testing <- function(exprmat = NULL,
                   parallel = FALSE,
                   n_cpus = 1,
                   space_y = space_y, 
-                  number_y = number_y,
-                  log = log)},cl=n_cpus))
+                  number_y = number_y)},cl=n_cpus))
       
       #res <- as.vector(unlist(res))
       
@@ -352,8 +337,7 @@ ccdf_testing <- function(exprmat = NULL,
     Z <- covariate
     res <- do.call("rbind",pbapply::pblapply(1:nrow(Y), function(i){test_asymp(Y[i,], X, Z, 
                                                                                space_y = space_y, 
-                                                                               number_y = number_y,
-                                                                               log = log)}, cl=n_cpus))
+                                                                               number_y = number_y)}, cl=n_cpus))
     df <- data.frame(raw_pval = res$raw_pval, adj_pval = p.adjust(res$raw_pval, method = "BH"), test_statistic = res$Stat)
   }
   

@@ -19,8 +19,7 @@ ccdf_testing(
   n_cpus = NULL,
   adaptive = FALSE,
   space_y = FALSE,
-  number_y = ncol(exprmat),
-  log = FALSE
+  number_y = ncol(exprmat)
 )
 }
 \arguments{
@@ -82,11 +81,6 @@ the maximum of the observations is used. Default is \code{FALSE}.}
 
 \item{number_y}{an integer value indicating the number of y thresholds (and therefore
 the number of regressions) to perform the test. Default is \code{ncol(exprmat)}.}
-
-\item{log}{a logical flag indicating whether the y thresholds are spaced in logarithmic scale. 
-When \code{log} is \code{TRUE}, a regular sequence between the minimum and
-the maximum in the logarithmic scale of the observations is used. If the observations
-are sampled from a count distribution, \code{log} should be \code{TRUE}. Default is \code{FALSE}.}
 }
 \value{
 A list with the following elements:\itemize{
@@ -104,13 +98,6 @@ A list with the following elements:\itemize{
 }
 \description{
 Main function to perform complex hypothesis testing using (un)conditional independence test
-}
-\examples{
-X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
-Y <- replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1)))
-Y <- t(Y)
-res_asymp <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="asymptotic") # asymptotic test
-res_perm <- ccdf_testing(exprmat=data.frame(Y=Y), variable2test=data.frame(X=X), test="permutations", adaptive=TRUE) # adaptive permutation test
 }
 \references{
 Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2019).

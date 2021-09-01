@@ -11,7 +11,7 @@
 #'@import ggplot2
 #'@export
 
-plot_pvals <- function(pvals, ...){
+plot_pvals <- function(pvals){
   t <- c(1:length(pvals))
   s <- (t/length(pvals))*0.05
   df_plot_perm <- data.frame("y" = sort(pvals), "x" = c(1:length(pvals)))

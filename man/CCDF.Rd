@@ -31,9 +31,9 @@ Default is \code{'linear regression'} since it is the method used in the test.}
 
 \item{fast}{a logical flag indicating whether the fast implementation of
 logistic regression should be used. Only if \code{'dist_permutations'} is specified.
-Default is \code{TRUE}.
+Default is \code{TRUE}.}
 
-#'@param space_y a logical flag indicating whether the y thresholds are spaced. 
+\item{space_y}{a logical flag indicating whether the y thresholds are spaced. 
 When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
 the maximum of the observations is used. Default is \code{FALSE}.}
 

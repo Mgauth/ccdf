@@ -4,7 +4,7 @@
 \alias{plot_pvals}
 \title{Plot of gene-wise p-values}
 \usage{
-plot_pvals(pvals, ...)
+plot_pvals(pvals)
 }
 \arguments{
 \item{pvals}{a vector of length \code{n} containing the raw p-values for
