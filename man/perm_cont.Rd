@@ -17,7 +17,7 @@ containing the variable to be tested (the condition to be tested).}
 containing the covariate. Multiple variables are not allowed.}
 }
 \value{
-\code{X_star}: a vector of permuted \code{X}.
+\code{X_star} a vector of permuted \code{X}.
 }
 \description{
 Permutation procedure when Z is continuous

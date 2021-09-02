@@ -23,9 +23,10 @@ Default is \code{'linear regression'} since it is the method used in the test.}
 
 \item{fast}{a logical flag indicating whether the fast implementation of
 logistic regression should be used. Only if \code{'dist_permutations'} is specified.
-Default is \code{TRUE}.
-
-#'@return A list with the following elements:\itemize{
+Default is \code{TRUE}.}
+}
+\value{
+A list with the following elements:\itemize{
   \item \code{cdf}: a vector of the cumulative distribution function of a given gene.
   \item \code{ccdf}: a vector of the conditional cumulative distribution function of a given gene, computed
   given \code{X}. Only if \code{Z} is \code{NULL}.
@@ -36,7 +37,7 @@ Default is \code{TRUE}.
   \item \code{y_sort}: a vector of the sorted expression points at which the CDF and the CCDFs are calculated.
   \item \code{x_sort}: a vector of the variables associated with \code{y_sort}.
   \item \code{z_sort}: a vector of the covariates associated with \code{y_sort}. Only if \code{Z} is not \code{NULL}.
-}}
+}
 }
 \description{
 Old version of CDF function

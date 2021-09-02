@@ -12,7 +12,7 @@
 #'
 #'@export
 #' 
-#'@return \code{X_star}: a vector of permuted \code{X}.
+#'@return \code{X_star} a vector of permuted \code{X}.
 
 
 

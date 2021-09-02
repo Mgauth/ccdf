@@ -15,7 +15,7 @@
 #' 
 #'@keywords internal
 #' 
-#'@return \code{w}: a vector of weights
+#'@return \code{w} a vector of weights
 
 
 

@@ -19,7 +19,7 @@ containing the covariate.
 Multiple variables are not allowed}
 }
 \value{
-\code{w}: a vector of weights
+\code{w} a vector of weights
 }
 \description{
 Computation of weights for CCDF, used in permut function when \code{dist_permuations} is specified.
