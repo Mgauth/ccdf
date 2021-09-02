@@ -1,3 +1,4 @@
-# ccdf 1.1.0
+# News about the `ccdf` R package
 
-* Added a `NEWS.md` file to track changes to the package.
+### Version 1.1.1 (2021-09-02):
+*  CRAN version

@@ -88,6 +88,13 @@
 #'
 #'@export
 #'
+#'@examples
+#' 
+#'X <- rbinom(n=100, size = 1, prob = 0.5)
+#'Y <- t(replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))))
+#'res_asymp <- ccdf_testing(exprmat=data.frame(Y=Y), 
+#'variable2test=data.frame(X=as.factor(X)), test="asymptotic",
+#'n_cpus=1)$pvals # asymptotic test
 
 
 ccdf_testing <- function(exprmat = NULL,

@@ -1,13 +1,23 @@
 Package: ccdf
 Type: Package
 Title: Complex Hypothesis Testing Through Conditional Cumulative Distribution Function Estimation (Distribution-Free Single-cell Differential Expression Analysis)
-Version: 1.1.0
-Author: Marine Gauthier, Boris Hejblum, Denis Agniel, Rodolphe Thiébaut
+Version: 1.1.1
+Authors@R: c(person("Marine", "Gauthier", role = c("aut","cre"),
+	                  email = "marine.gauthier@u-bordeaux.fr"),
+	           person("Denis", "Agniel", role = c("aut"),
+                    email = "denis.agniel@gmail.com"),
+	           person("Boris P.", "Hejblum", role = c("aut"),
+	                  email = "boris.hejblum@u-bordeaux.fr"))
 Imports: pbapply,parallel,matrixStats,CompQuadForm, RcppNumerical, doParallel, foreach, ggplot2, randomForest, rpart,statmod, viridisLite, survey, cowplot
 Maintainer: The package maintainer <marine.gauthier@u-bordeaux.fr>
-Description: Complex Hypothesis Testing Through Conditional Cumulative Distribution Function Estimation (Distribution-Free Single-cell Differential Expression Analysis)
-License: GPL-2 | file LICENSE
+Description: Complex Hypothesis Testing Through Conditional Cumulative Distribution 
+             Function Estimation (Distribution-Free Single-cell Differential Expression Analysis).
+             Method is detailed in: Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). 
+             Distribution-free complex hypothesis testing for single-cell RNA-seq differential 
+             expression analysis, *BioRxiv* [DOI:10.1101/2021.05.21.445165]
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Depends: R (>= 3.6)
+BugReports: https://github.com/mgauth/ccdf/issues

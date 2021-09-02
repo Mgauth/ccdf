@@ -150,7 +150,7 @@ test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique
   
   # param <- list(lim=15000,acc= 5e-04)
   # pval <- CompQuadForm::davies(q=STAT, lambda=diag(A), lim = param$lim, acc = param$acc)$Qq
-  pval <- pchisqsum(STAT, lower.tail = FALSE, df = rep(1,length(diag(A))), a = diag(A), method = "saddlepoint")
+  pval <- survey::pchisqsum(STAT, lower.tail = FALSE, df = rep(1,length(diag(A))), a = diag(A), method = "saddlepoint")
   
   # times <- 2
   # while ((pval>1)&(times<11)){
