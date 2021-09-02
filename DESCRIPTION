@@ -1,7 +1,7 @@
 Package: ccdf
 Type: Package
 Title: Complex Hypothesis Testing Through Conditional Cumulative Distribution Function Estimation (Distribution-Free Single-cell Differential Expression Analysis)
-Version: 1.1.1
+Version: 1.1.2
 Authors@R: c(person("Marine", "Gauthier", role = c("aut","cre"),
 	                  email = "marine.gauthier@u-bordeaux.fr"),
 	           person("Denis", "Agniel", role = c("aut"),
