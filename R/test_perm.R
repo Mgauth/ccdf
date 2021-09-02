@@ -1,7 +1,7 @@
 #' Permutation test
 #'
 #'@param Y a numeric vector of size \code{n} containing the
-#'preprocessed expressions from \code{n} samples (or cells).
+#'preprocessed expression for a given gene from \code{n} samples (or cells).
 #'
 #'@param X a numeric or factor vector of size \code{n}
 #'containing the variable to be tested (the condition to be tested). 
@@ -31,6 +31,12 @@
 #' @import foreach
 #'
 #' @export
+#' 
+#'@return A data frame with the following elements:
+#'\itemize{
+#'   \item \code{score} contains the test statistic for a given gene.
+#'   \item \code{raw_pval} contains the raw p-values for a given gene computed from \code{n_perm} permutations.
+#' }
 
 test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, number_y = length(Y)){
 

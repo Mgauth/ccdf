@@ -42,6 +42,13 @@ Default is \code{parallel::detectCores() - 1}.}
 logistic regression should be used. Only if \code{'dist_permutations'} is specified.
 Default is \code{TRUE}.}
 }
+\value{
+A data frame with the following elements:
+\itemize{
+  \item \code{score} contains the test statistic for a given gene.
+  \item \code{pval} contains the raw p-values for a given gene computed from \code{n_perm} permutations.
+}
+}
 \description{
 Permutation test when \code{dist_permutations} is specified
 }

@@ -8,7 +8,7 @@ test_asymp(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique(Y)))
 }
 \arguments{
 \item{Y}{a numeric vector of size \code{n} containing the
-preprocessed expressions from \code{n} samples (or cells).}
+preprocessed expression for a given gene from \code{n} samples (or cells).}
 
 \item{X}{a numeric or factor vector of size \code{n}
 containing the variable to be tested (the condition to be tested).}
@@ -22,6 +22,13 @@ the maximum of the observations is used. Default is \code{FALSE}.}
 
 \item{number_y}{an integer value indicating the number of y thresholds (and therefore
 the number of regressions) to perform the test. Default is \code{length(Y)}.}
+}
+\value{
+A data frame with the following elements:
+\itemize{
+  \item \code{raw_pval} contains the raw p-values for a given gene.
+  \item \code{Stat} contains the test statistic for a given gene.
+}
 }
 \description{
 Asymptotic test

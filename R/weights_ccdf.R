@@ -11,9 +11,12 @@
 #'containing the covariate.
 #'Multiple variables are not allowed
 #'
-#' @export
+#'@export
 #' 
-#' @keywords internal
+#'@keywords internal
+#' 
+#'@return \code{w}: a vector of weights
+
 
 
 weights_ccdf <- function(Y,X,Z=NULL){

@@ -2,7 +2,7 @@
 % Please edit documentation in R/perm_cont.R
 \name{perm_cont}
 \alias{perm_cont}
-\title{permutation procedure when Z is continuous}
+\title{Permutation procedure when Z is continuous}
 \usage{
 perm_cont(Y, X, Z)
 }
@@ -16,6 +16,9 @@ containing the variable to be tested (the condition to be tested).}
 \item{Z}{a numeric or vector of size \code{n}
 containing the covariate. Multiple variables are not allowed.}
 }
+\value{
+\code{X_star}: a vector of permuted \code{X}.
+}
 \description{
-Permutation test using the test statistic
+Permutation procedure when Z is continuous
 }

@@ -40,6 +40,20 @@ the maximum of the observations is used. Default is \code{FALSE}.}
 \item{number_y}{an integer value indicating the number of y thresholds (and therefore
 the number of regressions) to perform the test. Default is \code{length(Y)}.}
 }
+\value{
+A list with the following elements:\itemize{
+  \item \code{cdf}: a vector of the cumulative distribution function of a given gene.
+  \item \code{ccdf}: a vector of the conditional cumulative distribution function of a given gene, computed
+  given \code{X}. Only if \code{Z} is \code{NULL}.
+  \item \code{ccdf_nox}: a vector of the conditional cumulative distribution function of a given gene, computed
+  given \code{Z} only (i.e. \code{X} is ignored.). Only if \code{Z} is not \code{NULL}.
+  \item \code{ccdf_x}: a vector of the conditional cumulative distribution function of a given gene, computed
+  given \code{X} and \code{Z}. Only if \code{Z} is not \code{NULL}.
+  \item \code{y_sort}: a vector of the sorted expression points at which the CDF and the CCDFs are calculated.
+  \item \code{x_sort}: a vector of the variables associated with \code{y_sort}.
+  \item \code{z_sort}: a vector of the covariates associated with \code{y_sort}. Only if \code{Z} is not \code{NULL}.
+}
+}
 \description{
 Function to compute (un)conditional cumulative distribution function (CDF), used by plot_CCDF function.
 }

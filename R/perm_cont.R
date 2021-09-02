@@ -1,6 +1,5 @@
-#' permutation procedure when Z is continuous
+#' Permutation procedure when Z is continuous
 #'
-#' Permutation test using the test statistic
 #'
 #'@param Y a numeric vector of size \code{n} containing the
 #'preprocessed expressions from \code{n} samples (or cells).
@@ -11,7 +10,11 @@
 #'@param Z a numeric or vector of size \code{n}
 #'containing the covariate. Multiple variables are not allowed.
 #'
-#' @export
+#'@export
+#' 
+#'@return \code{X_star}: a vector of permuted \code{X}.
+
+
 
 perm_cont <- function(Y,X,Z){
   prob <- matrix(NA,length(Z),length(Z))
