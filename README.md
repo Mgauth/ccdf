@@ -2,7 +2,6 @@
 
 # `ccdf`
 
-[![Downloads](https://cranlogs.r-pkg.org/badges/ccdf?color=blue)](https://www.r-pkg.org/pkg/ccdf)
 
 ## Overview
 
