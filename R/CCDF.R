@@ -25,8 +25,9 @@
 #'@param number_y an integer value indicating the number of y thresholds (and therefore
 #'the number of regressions) to perform the test. Default is \code{length(Y)}.
 #'
+#'@importFrom stats model.matrix
 #' 
-#' @export
+#'@export
 #' 
 
 #'@return A list with the following elements:\itemize{

@@ -25,11 +25,13 @@
 #'@param number_y an integer value indicating the number of y thresholds (and therefore
 #'the number of regressions) to perform the test. Default is \code{length(Y)}.
 #'
-#'@import ggplot2
+#'@import ggplot2 cowplot stats
 #'
 #'@export
 
+
 plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FALSE,number_y=length(Y)){
+  
   
   stopifnot(is.data.frame(Y))
   stopifnot(is.data.frame(X))
@@ -39,11 +41,11 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
   genes_names <- colnames(Y)
   
   if (sum(is.na(Y)) > 1) {
-    warning("'y' contains", sum(is.na(y)), "NA values. ",
+    warning("'y' contains", sum(is.na(Y)), "NA values. ",
             "\nCurrently they are ignored in the computations but ",
             "you should think carefully about where do those NA/NaN ",
             "come from...")
-    Y <- Y[complete.cases(Y)]
+    Y <- Y[stats::complete.cases(Y)]
   }
   
   
@@ -73,8 +75,8 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
       df_plot$x <- ordered(df_plot$x, levels = levels(df_plot$x))
       l_X <- length(unique(X[,1]))
       ggplot() + ggtitle(colnames(Y)) +
-        geom_step(data = df_plot,aes(x = y, y = cdf, color = viridis(n=(l_X+1))[1]), size = 0.5, linetype="dotted") +
-        geom_step(data = df_plot, aes(x = y, y = ccdf, color = as.factor(x)), size = 0.5) +
+        geom_step(data = df_plot,aes(x = ~y, y = ~cdf, color = viridis(n=(l_X+1))[1]), size = 0.5, linetype="dotted") +
+        geom_step(data = df_plot, aes(x = ~y, y = ~ccdf, color = as.factor(~x)), size = 0.5) +
         scale_color_manual(name = "", labels=c("CDF", paste0("CCDF X=", levels(df_plot$x)[ordered(levels(df_plot$x))])),
                            values = viridis(n=4),
                            guide = guide_legend(override.aes = list(linetype = c("dotted",rep("solid",l_X))))) + xlab("gene expression") +
@@ -82,8 +84,8 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
     }
     else{
       ggplot() + ggtitle(colnames(Y)) +
-        geom_step(data = df_plot,aes(x = y, y = cdf, color = viridis(n=2)[1]), size = 0.5, linetype="dotted") +
-        geom_point(data = df_plot, aes(x = y, y = ccdf, color =  viridis(n=2)[2]), size = 0.5) +
+        geom_step(data = df_plot,aes(x = ~y, y = ~cdf, color = viridis(n=2)[1]), size = 0.5, linetype="dotted") +
+        geom_point(data = df_plot, aes(x = ~y, y = ~ccdf, color =  viridis(n=2)[2]), size = 0.5) +
         scale_color_manual(name = "", labels = c("CDF", "CCDF"),
                            values = c(viridis(n=3)),
                            guide = guide_legend(override.aes = list(linetype = c("dotted","blank"),
@@ -109,8 +111,8 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
         l_X <- length(unique(X[,1]))
         
         p_cdf <- ggplot() + ggtitle(colnames(Y)) +
-          geom_step(data = df_X, aes(x = y, y = cdf, color = "CDF"), size = 0.5, linetype="dotted") +
-          geom_step(data = df_X, aes(x = y, y = ccdf, color = factor(x, exclude = "CDF")), size = 0.5) +
+          geom_step(data = df_X, aes(x = ~y, y = ~cdf, color = "CDF"), size = 0.5, linetype="dotted") +
+          geom_step(data = df_X, aes(x = ~y, y = ~ccdf, color = factor(~x, exclude = "CDF")), size = 0.5) +
           scale_color_manual(name = "", limits = levels(df_X$x), #labels=c("CDF", paste0("CCDF X=", levels(df_X$x)[ordered(levels(df_X$x))])),
                              values = c(viridis(n=4)[-4],"#CC0066"),
                              guide = guide_legend(override.aes = list(linetype = c(rep("solid",l_X),"dotted")))) + xlab("gene expression") +
@@ -124,8 +126,8 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
         
         
         p_facet <- ggplot() + ggtitle(colnames(Y)) +
-          geom_step(data = df_plot, aes(x = y, y = ccdf_x, color = factor(x, exclude = "Marginal on Z"))) +
-          geom_step(data = df_plot, aes(x = y, y = ccdf_nox, color = "Marginal on Z"), size = 0.5, linetype = "dotted") +
+          geom_step(data = df_plot, aes(x = ~y, y = ~ccdf_x, color = factor(~x, exclude = "Marginal on Z"))) +
+          geom_step(data = df_plot, aes(x = ~y, y = ~ccdf_nox, color = "Marginal on Z"), size = 0.5, linetype = "dotted") +
           scale_color_manual(name = "CCDF", 
                              values = c(viridis(n=4)[-4],"gold"), limits = levels(df_plot$x),
                              guide = guide_legend(override.aes = list(linetype = c("solid","solid","solid","dotted")))) +
@@ -140,8 +142,8 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
       }
       else{ # X continuous
         p_cdf <- ggplot() + ggtitle(colnames(Y)) +
-          geom_step(data = df_X, aes(x = y, y = cdf, color="CDF")) +
-          geom_point(data = df_X, aes(x = y, y = ccdf, color="CCDF"), shape=16, size = 0.5) +
+          geom_step(data = df_X, aes(x = ~y, y = ~cdf, color="CDF")) +
+          geom_point(data = df_X, aes(x = ~y, y = ~ccdf, color="CCDF"), shape=16, size = 0.5) +
           scale_color_manual(name = "",
                              labels = c("CCDF", "CDF"),
                              values = c("#CC0066",viridis(n=3)[2]),
@@ -156,8 +158,8 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
         l_Z <- length(unique(Z[,1]))
         
         p_facet <- ggplot() + ggtitle(colnames(Y)) +
-          geom_point(data = df_plot, aes(x = y, y = ccdf_x, color=viridis(n=3)[1]), shape=16, size = 0.5) +
-          geom_point(data = df_plot, aes(x = y, y = ccdf_nox, color='gold'), shape=2, size = 0.5) +
+          geom_point(data = df_plot, aes(x = ~y, y = ~ccdf_x, color=viridis(n=3)[1]), shape=16, size = 0.5) +
+          geom_point(data = df_plot, aes(x = ~y, y = ~ccdf_nox, color='gold'), shape=2, size = 0.5) +
           scale_color_manual(name = "CCDF",
                              labels = c("Given X and Z", "Marginal on Z"),
                              values = c(viridis(n=3)[1],'gold'),
@@ -185,8 +187,8 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
         l_X <- length(unique(X[,1]))
         
         p_cdf <- ggplot() + ggtitle(colnames(Y)) +
-          geom_step(data = df_X, aes(x = y, y = cdf, color = "CDF"), size = 0.5, linetype="dotted") +
-          geom_step(data = df_X, aes(x = y, y = ccdf, color = factor(x, exclude = "CDF"))) +
+          geom_step(data = df_X, aes(x = ~y, y = ~cdf, color = "CDF"), size = 0.5, linetype="dotted") +
+          geom_step(data = df_X, aes(x = ~y, y = ~ccdf, color = factor(~x, exclude = "CDF"))) +
           scale_color_manual(name = "", limits = levels(df_X$x), #labels=c("CDF", paste0("CCDF X=", levels(df_X$x)[ordered(levels(df_X$x))])),
                              values = c(viridis(n=4)[-4],"#CC0066"),
                              guide = guide_legend(override.aes = list(linetype = c(rep("solid",l_X),"dotted")))) + xlab("gene expression") +
@@ -197,8 +199,8 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
         l_X <- length(unique(X[,1]))
         
         p_facet <- ggplot() + ggtitle(colnames(Y)) +
-          geom_point(data = df_plot, aes(x = y, y = ccdf_x, color = factor(x, exclude = "Marginal on Z")), shape=16, size = 0.5) +
-          geom_point(data = df_plot, aes(x = y, y = ccdf_nox, color = "Marginal on Z"),  shape=16, size = 0.5) +
+          geom_point(data = df_plot, aes(x = ~y, y = ~ccdf_x, color = factor(~x, exclude = "Marginal on Z")), shape=16, size = 0.5) +
+          geom_point(data = df_plot, aes(x = ~y, y = ~ccdf_nox, color = "Marginal on Z"),  shape=16, size = 0.5) +
           scale_color_manual(name = "CCDF",
                              values = c(viridis(n=4)[-4],"gold"), limits = levels(df_plot$x),
                              guide = guide_legend(override.aes = list(linetype = c(rep("solid",l_X),"dotted")))) +
@@ -213,9 +215,9 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
       
       else{
         ggplot() + ggtitle(colnames(Y)) +
-          geom_step(data = df_plot, aes(x = y, y = cdf,  color=viridis(n=3)[2]), size = 0.7) +
-          geom_point(data = df_plot, aes(x = y, y = ccdf_x, color=viridis(n=3)[1]), shape=16, size = 0.5) +
-          geom_point(data = df_plot, aes(x = y, y = ccdf_nox, color='gold'), shape=2, size = 0.5) +
+          geom_step(data = df_plot, aes(x = ~y, y = ~df,  color=viridis(n=3)[2]), size = 0.7) +
+          geom_point(data = df_plot, aes(x = ~y, y = ~ccdf_x, color=viridis(n=3)[1]), shape=16, size = 0.5) +
+          geom_point(data = df_plot, aes(x = ~y, y = ~ccdf_nox, color='gold'), shape=2, size = 0.5) +
           scale_color_manual(name = "",
                              labels = c("CDF", "CCDF_X", "CCDF_noX"),
                              values = c(viridis(n=3)),

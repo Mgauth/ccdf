@@ -16,9 +16,9 @@ plot_pvals <- function(pvals){
   s <- (t/length(pvals))*0.05
   df_plot_perm <- data.frame("y" = sort(pvals), "x" = c(1:length(pvals)))
   ggplot()+ scale_y_log10()+
-    geom_point(data = df_plot_perm,aes(x = x, y = y, color = viridis(4)[1]), size = 0.5)+
-    geom_line(data = df_plot_perm, aes(y = s, x = x,color = viridis(4)[2]), size = 0.5) +
-    geom_line(data = df_plot_perm, aes(y = 0.05, x = x, color = "red"), size = 0.5) +
+    geom_point(data = df_plot_perm,aes(x = ~x, y = ~y, color = viridis(4)[1]), size = 0.5)+
+    geom_line(data = df_plot_perm, aes(y = ~s, x = ~x,color = viridis(4)[2]), size = 0.5) +
+    geom_line(data = df_plot_perm, aes(y = 0.05, x = ~x, color = "red"), size = 0.5) +
     scale_color_manual(name = "", labels = c("B-H limit", "p-values", "5% threshold"),
                        values = c(viridis(4)[c(1,2)], "red")) + xlab("rank") +
     ylab("log10 scale") + xlim(0, length(df_plot_perm$y)) +

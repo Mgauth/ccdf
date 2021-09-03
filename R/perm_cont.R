@@ -11,6 +11,8 @@
 #'containing the covariate. Multiple variables are not allowed.
 #'
 #'@export
+#'
+#'@import stats
 #' 
 #'@return \code{X_star} a vector of permuted \code{X}.
 
