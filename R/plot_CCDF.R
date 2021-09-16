@@ -217,7 +217,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
         ggplot() + ggtitle(colnames(Y)) +
           geom_step(data = df_plot, aes(x = df_plot$y, y = df_plot$df,  color=viridis(n=3)[2]), size = 0.7) +
           geom_point(data = df_plot, aes(x = df_plot$y, y = df_plot$ccdf_x, color=viridis(n=3)[1]), shape=16, size = 0.5) +
-          geom_point(data = df_plot, aes(x = df_plot$y, y = df_plot$ccdf_nox, color='gold'), shape=2, size = 0.5) +
+          geom_point(data = df_plot, aes(x = df_plot$y, y = df_plot$cdf_nox, color='gold'), shape=2, size = 0.5) +
           scale_color_manual(name = "",
                              labels = c("CDF", "CCDF_X", "CCDF_noX"),
                              values = c(viridis(n=3)),
