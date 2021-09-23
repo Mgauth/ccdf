@@ -12,8 +12,14 @@ each gene}
 }
 \value{
 a plot of sorted gene-wise p-values
+
+a \code{\link[ggplot2]{ggplot}} object
 }
 \description{
 This function prints the sorted exact p-values along with the Benjamini-Hochberg
 limit and the 5% threshold
+}
+\examples{
+
+plot_pvals(runif(100,0,1))
 }

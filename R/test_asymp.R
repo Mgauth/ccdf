@@ -3,11 +3,11 @@
 #'@param Y a numeric vector of size \code{n} containing the
 #'preprocessed expression for a given gene from \code{n} samples (or cells).
 #'
-#'@param X a numeric or factor vector of size \code{n}
-#'containing the variable to be tested (the condition to be tested). 
+#'@param X a data frame of numeric or factor vector(s) of size \code{n}
+#'containing the variable(s) to be tested (the condition(s))
 #' 
-#'@param Z a numeric or factor vector of size \code{n}
-#'containing the covariate. Multiple variables are not allowed.
+#'@param Z a data frame of numeric or factor vector(s) 
+#'of size \code{n} containing the covariate(s)
 #'
 #'@param space_y a logical flag indicating whether the y thresholds are spaced. 
 #'When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
@@ -24,6 +24,12 @@
 #'   \item \code{raw_pval} contains the raw p-values for a given gene.
 #'   \item \code{Stat} contains the test statistic for a given gene.
 #' }
+#' 
+#' @examples
+#' 
+#'X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
+#'Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))
+#'res_asymp <- test_asymp(Y,data.frame(X=X))
 
 
 test_asymp <- function(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique(Y))){

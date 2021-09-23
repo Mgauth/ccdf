@@ -27,11 +27,11 @@ ccdf_testing(
 preprocessed expressions from \code{n} samples (or cells) for \code{G}
 genes. Default is \code{NULL}.}
 
-\item{variable2test}{a data frame of numeric or factor vector(s) of size \code{n}
-containing the variable(s) to be tested (the condition(s))}
+\item{variable2test}{a data frame of numeric or factor vector(s) 
+of size \code{n} containing the variable(s) to be tested (the condition(s))}
 
-\item{covariate}{a data frame of numeric or factor vector(s) of size \code{n}
-containing the covariate(s)}
+\item{covariate}{a data frame of numeric or factor vector(s) 
+of size \code{n} containing the covariate(s)}
 
 \item{distance}{a character string indicating which distance to use to
 compute the test, either \code{'L2'}, \code{'L1'} or 
@@ -101,10 +101,10 @@ Main function to perform complex hypothesis testing using (un)conditional indepe
 }
 \examples{
 
-X <- rbinom(n=100, size = 1, prob = 0.5)
+X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
 Y <- t(replicate(10, ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))))
 res_asymp <- ccdf_testing(exprmat=data.frame(Y=Y), 
-variable2test=data.frame(X=as.factor(X)), test="asymptotic",
+variable2test=data.frame(X=X), test="asymptotic",
 n_cpus=1)$pvals # asymptotic test
 }
 \references{

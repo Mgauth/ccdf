@@ -7,7 +7,7 @@
 #'@param X a numeric or factor vector of size \code{n}
 #'containing the variable to be tested (the condition to be tested). 
 #' 
-#'@param Z a numeric or vector of size \code{n}
+#'@param Z a numeric vector of size \code{n}
 #'containing the covariate. Multiple variables are not allowed.
 #'
 #'@export
@@ -15,6 +15,13 @@
 #'@import stats
 #' 
 #'@return \code{X_star} a vector of permuted \code{X}.
+#'
+#'@examples
+#' 
+#'X <- rbinom(n=100, size = 1, prob = 0.5)
+#'Z <- rnorm(100,0,1)
+#'Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))
+#'res <- perm_cont(Y,X,Z)
 
 
 

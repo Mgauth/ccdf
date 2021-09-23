@@ -42,6 +42,12 @@
 #'   \item \code{x_sort}: a vector of the variables associated with \code{y_sort}.
 #'   \item \code{z_sort}: a vector of the covariates associated with \code{y_sort}. Only if \code{Z} is not \code{NULL}.
 #' }
+#' 
+#'@examples
+#' 
+#'X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
+#'Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))
+#'res <- CCDF(Y,data.frame(X=X),method="linear regression")
 
 CCDF <- function(Y,X,Z=NULL,method=c("linear regression","logistic regression","RF"), fast=TRUE, space_y=FALSE, number_y=length(Y)){
   

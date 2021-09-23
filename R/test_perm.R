@@ -3,11 +3,11 @@
 #'@param Y a numeric vector of size \code{n} containing the
 #'preprocessed expression for a given gene from \code{n} samples (or cells).
 #'
-#'@param X a numeric or factor vector of size \code{n}
-#'containing the variable to be tested (the condition to be tested). 
+#'@param X a data frame of numeric or factor vector(s) of size \code{n}
+#'containing the variable(s) to be tested (the condition(s)). Multiple variables are not allowed.
 #' 
-#'@param Z a numeric or factor vector of size \code{n}
-#'containing the covariate. Multiple variables are not allowed.
+#'@param Z a data frame of numeric or factor vector(s) 
+#'of size \code{n} containing the covariate(s). Multiple variables are not allowed.
 #'
 #'@param n_perm the number of permutations. Default is \code{100}.
 #'
@@ -37,6 +37,12 @@
 #'   \item \code{score} contains the test statistic for a given gene.
 #'   \item \code{raw_pval} contains the raw p-values for a given gene computed from \code{n_perm} permutations.
 #' }
+#' 
+#' @examples
+#' 
+#'X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
+#'Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))
+#'res_perm <- test_perm(Y,data.frame(X=X),n_perm=10)
 
 test_perm <- function(Y, X, Z = NULL, n_perm = 100, parallel = FALSE, n_cpus = NULL, space_y = FALSE, number_y = length(Y)){
 

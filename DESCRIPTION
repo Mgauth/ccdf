@@ -1,6 +1,6 @@
 Package: ccdf
 Type: Package
-Title: Distribution-Free Single-Cell Differential Expression Analysis
+Title: "Distribution-Free Single-Cell Differential Expression Analysis"
 Version: 1.1.2
 Authors@R: c(person("Marine", "Gauthier", role = c("aut","cre"),
 	                  email = "marine.gauthier@u-bordeaux.fr"),
@@ -8,11 +8,11 @@ Authors@R: c(person("Marine", "Gauthier", role = c("aut","cre"),
                     email = "denis.agniel@gmail.com"),
 	           person("Boris P.", "Hejblum", role = c("aut"),
 	                  email = "boris.hejblum@u-bordeaux.fr"))
-Imports: pbapply,parallel,matrixStats,CompQuadForm, RcppNumerical, doParallel, foreach, ggplot2, randomForest, rpart,statmod, viridisLite, survey, cowplot
+Imports: pbapply,parallel,matrixStats,CompQuadForm, RcppNumerical, doParallel, foreach, ggplot2, randomForest, rpart, statmod, viridisLite, survey, cowplot
 Maintainer: Marine Gauthier <marine.gauthier@u-bordeaux.fr>
-Description: Complex Hypothesis Testing Through Conditional Cumulative Distribution Function Estimation.
+Description: Complex hypothesis testing through conditional cumulative distribution function estimation.
              Method is detailed in: Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). 
-             Distribution-free complex hypothesis testing for single-cell RNA-seq differential expression analysis, BioRxiv <doi:10.10.1101/2021.05.21.445165>.
+             Distribution-free complex hypothesis testing for single-cell RNA-seq differential expression analysis, BioRxiv <doi:10.1101/2021.05.21.445165>.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

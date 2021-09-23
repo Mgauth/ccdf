@@ -10,11 +10,11 @@ test_asymp(Y, X, Z = NULL, space_y = FALSE, number_y = length(unique(Y)))
 \item{Y}{a numeric vector of size \code{n} containing the
 preprocessed expression for a given gene from \code{n} samples (or cells).}
 
-\item{X}{a numeric or factor vector of size \code{n}
-containing the variable to be tested (the condition to be tested).}
+\item{X}{a data frame of numeric or factor vector(s) of size \code{n}
+containing the variable(s) to be tested (the condition(s))}
 
-\item{Z}{a numeric or factor vector of size \code{n}
-containing the covariate. Multiple variables are not allowed.}
+\item{Z}{a data frame of numeric or factor vector(s) 
+of size \code{n} containing the covariate(s)}
 
 \item{space_y}{a logical flag indicating whether the y thresholds are spaced. 
 When \code{space_y} is \code{TRUE}, a regular sequence between the minimum and 
@@ -32,4 +32,10 @@ A data frame with the following elements:
 }
 \description{
 Asymptotic test
+}
+\examples{
+
+X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
+Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))
+res_asymp <- test_asymp(Y,data.frame(X=X))
 }

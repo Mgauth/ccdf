@@ -40,6 +40,15 @@ the maximum of the observations is used. Default is \code{FALSE}.}
 \item{number_y}{an integer value indicating the number of y thresholds (and therefore
 the number of regressions) to perform the test. Default is \code{length(Y)}.}
 }
+\value{
+a \code{\link[ggplot2]{ggplot}} object
+}
 \description{
 Function to plot the CCDF according to the type of X et Z
+}
+\examples{
+
+X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
+Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))
+plot_CCDF(data.frame(Y=Y),data.frame(X=X),method="linear regression")
 }

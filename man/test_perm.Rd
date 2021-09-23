@@ -19,11 +19,11 @@ test_perm(
 \item{Y}{a numeric vector of size \code{n} containing the
 preprocessed expression for a given gene from \code{n} samples (or cells).}
 
-\item{X}{a numeric or factor vector of size \code{n}
-containing the variable to be tested (the condition to be tested).}
+\item{X}{a data frame of numeric or factor vector(s) of size \code{n}
+containing the variable(s) to be tested (the condition(s)). Multiple variables are not allowed.}
 
-\item{Z}{a numeric or factor vector of size \code{n}
-containing the covariate. Multiple variables are not allowed.}
+\item{Z}{a data frame of numeric or factor vector(s) 
+of size \code{n} containing the covariate(s). Multiple variables are not allowed.}
 
 \item{n_perm}{the number of permutations. Default is \code{100}.}
 
@@ -50,4 +50,10 @@ A data frame with the following elements:
 }
 \description{
 Permutation test
+}
+\examples{
+
+X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
+Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))
+res_perm <- test_perm(Y,data.frame(X=X),n_perm=10)
 }
