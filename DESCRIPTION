@@ -11,11 +11,10 @@ Authors@R: c(person("Marine", "Gauthier", role = c("aut","cre"),
 Imports: pbapply,parallel,matrixStats,CompQuadForm, RcppNumerical, doParallel, foreach, ggplot2, randomForest, rpart, statmod, viridisLite, survey, cowplot
 Maintainer: Marine Gauthier <marine.gauthier@u-bordeaux.fr>
 Description: Complex hypothesis testing through conditional cumulative distribution function estimation.
-             Method is detailed in: Gauthier M, Agniel D, Thiébaut R & Hejblum BP (2020). 
+             Method is detailed in: Gauthier M, Agniel D, Thiebaut R & Hejblum BP (2020). 
              Distribution-free complex hypothesis testing for single-cell RNA-seq differential expression analysis, BioRxiv <doi:10.1101/2021.05.21.445165>.
 License: GPL (>= 3)
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 7.1.1
 Depends: R (>= 3.6)
 BugReports: https://github.com/mgauth/ccdf/issues

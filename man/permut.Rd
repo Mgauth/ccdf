@@ -54,8 +54,9 @@ Permutation test when \code{dist_permutations} is specified
 }
 \examples{
 
+if(interactive()){
 X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
 Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))
-permut(Y,X,method="linear regression",n_perm=10,n_cpus=2)
+permut(Y,X,method="linear regression",n_perm=10,n_cpus=2)}
 }
 \keyword{internal}

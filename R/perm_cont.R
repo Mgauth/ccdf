@@ -18,10 +18,11 @@
 #'
 #'@examples
 #' 
+#'if(interactive()){
 #'X <- rbinom(n=100, size = 1, prob = 0.5)
 #'Z <- rnorm(100,0,1)
 #'Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))
-#'res <- perm_cont(Y,X,Z)
+#'res <- perm_cont(Y,X,Z)}
 
 
 

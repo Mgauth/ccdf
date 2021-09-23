@@ -53,7 +53,8 @@ Permutation test
 }
 \examples{
 
+if(interactive()){
 X <- as.factor(rbinom(n=100, size = 1, prob = 0.5))
 Y <- ((X==1)*rnorm(n = 50,0,1)) + ((X==0)*rnorm(n = 50,0.5,1))
-res_perm <- test_perm(Y,data.frame(X=X),n_perm=10)
+res_perm <- test_perm(Y,data.frame(X=X),n_perm=10)}
 }
