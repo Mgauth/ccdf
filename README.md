@@ -26,6 +26,11 @@ article:
 
 ## Installation
 
+**`ccdf` is available from CRAN.**
+```r
+install.packages("ccdf")
+```
+
 **To install `ccdf`, you can download the development version on
 [GitHub](https://github.com/Mgauth/ccdf).**
 

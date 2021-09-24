@@ -31,6 +31,13 @@ The methods implemented in this package are detailed in the following article:
 
 ## Installation
 
+
+**`ccdf` is available from CRAN.**
+```{r GitHub-install, eval=FALSE}
+install.packages("ccdf")
+```
+
+
 **To install `ccdf`, you can download the development version on [GitHub](https://github.com/Mgauth/ccdf).**
 ```{r GitHub-install, eval=FALSE}
 #install.packages("devtools")
