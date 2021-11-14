@@ -1,4 +1,4 @@
-#setwd("~/Documents/Single-cell/data")
+# download files at https://doi.org/10.5281/zenodo.5701445
 
 library(fst)
 library(ccdf)
@@ -38,13 +38,13 @@ keep_cluster <- which(as.factor(covid_cluster)!=7)
 
 ### ccdf method (example)
 
-# calculer pour un gène (sous fonction appelée dans ccdf)
+# one gene
 i=1
 res <- test_asymp(as.numeric(ft[i,keep_cluster]),data.frame(X=factor(covid,levels=c("ITU","Ward","Not_admitted"))[keep_cluster]), 
                       #data.frame(Z=factor(covid_cluster,levels=c("0","1","2","3","4","5","6"))[keep_cluster]),
                       space_y = TRUE, number_y = 10) 
 
-# fonction principale pour tous les gènes (temps de calcul long, travailler sur peu de gènes pour tester sinon CURTA)
+# all genes
 
 res <- ccdf_testing(as.data.frame(ft[,keep_cluster]),data.frame(X=factor(covid,levels=c("ITU","Ward","Not_admitted"))[keep_cluster]), 
                   #data.frame(Z=factor(covid_cluster,levels=c("0","1","2","3","4","5","6"))[keep_cluster]),
