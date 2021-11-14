@@ -142,7 +142,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
                              values = c(viridis(n=(l_X+1))[-(l_X+1)],"gold"), limits = levels(df_plot$x),
                              guide = guide_legend(override.aes = list(linetype = c("solid","solid","solid","dotted")))) +
           xlab("gene expression") +
-          ylab("value") + theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + facet_wrap(.~as.factor(df_plot$z), ncol=3, scales = "free_y")
+          ylab("value") + theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + facet_wrap(.~as.factor(df_plot$z), ncol=3, scales = "fixed")
         
         ggdraw() +
           draw_plot(p_cdf, 0, 0.75, 0.75, 0.25) +
@@ -177,7 +177,7 @@ plot_CCDF <- function(Y,X,Z=NULL,method="linear regression",fast=TRUE,space_y=FA
                                                                       shape = c(16,2)))) +
           xlab("gene expression") +
           ylab("value") + theme_bw() + theme(plot.title = element_text(hjust = 0.5)) + 
-          facet_wrap(.~as.factor(df_plot$z), nrow=3, scales = "free_y")
+          facet_wrap(.~as.factor(df_plot$z), nrow=3, scales = "fixed")
         
         
         ggdraw() +
