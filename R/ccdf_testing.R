@@ -63,7 +63,6 @@
 #'
 #'@import foreach
 #'@import doParallel
-#'@import CompQuadForm
 #'@import pbapply
 #'
 #'
